@@ -20,7 +20,7 @@ public class User {
     @Column(name = "userName", nullable = false, unique = true)
     @NotEmpty(message = "Please provide a user Name")
     private String userName;
-    private Set<User> followers;
+    private Set<User> following;
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role>role;
 
@@ -77,12 +77,12 @@ public class User {
         this.userName = userName;
     }
 
-    public Set<User> getFollowers() {
-        return followers;
+    public Set<User> getFollowing() {
+        return following;
     }
 
-    public void setFollowers(Set<User> followers) {
-        this.followers = followers;
+    public void setFollowing(Set<User> following) {
+        this.following = following;
     }
 
     public Set<Role> getRole() {
@@ -96,7 +96,7 @@ public class User {
 
 
     public User() {
-        this.followers = new HashSet<>();
+        this.following = new HashSet<>();
         this.role = new HashSet<>();
         this.posts = new HashSet<>();
         this.setting = new HashSet<>();
@@ -111,7 +111,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", userName='" + userName + '\'' +
-                ", followers=" + followers +
+                ", followers=" + following +
                 ", role=" + role +
                 '}';
     }
