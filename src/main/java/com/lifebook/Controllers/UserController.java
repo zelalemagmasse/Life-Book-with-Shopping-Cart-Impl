@@ -11,22 +11,15 @@ public class UserController {
 
     @RequestMapping("/")
     public String homePageLoggedIn() {
-
         return "index";
     }
-
-	@GetMapping("/newmessage")
-	public String newMessage() {
-
-		return "message";
-	}
 
 	@PostMapping("/newmessage")
 	public String sendMessage() {
 
 		// Save message
 
-		return "redirect:/account/";
+		return "redirect:/users/";
 	}
 
 	@RequestMapping("/profile")

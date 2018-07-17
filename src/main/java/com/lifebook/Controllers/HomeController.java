@@ -10,7 +10,6 @@ public class HomeController {
 
     @RequestMapping("/")
     public String homePage() {
-
         return "index";
     }
 
@@ -23,7 +22,7 @@ public class HomeController {
 	@PostMapping("/login")
 	public String loggedIn() {
 
-		return "redirect:/account/";
+		return "redirect:/users/";
 	}
 
 	@GetMapping("/register")
