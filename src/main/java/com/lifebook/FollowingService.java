@@ -14,10 +14,9 @@ public class FollowingService {
     UserRepository userRepository;
 
 
-    public void addFolloiwng(String followingName, User currentUser){
-        User u= userRepository.findByUserName(followingName);
-        currentUser.getFollowing().add(u);
-
-    }
+//    public void addFollowIng(String followingName, User currentUser){
+//        currentUser.getFollowing().add(followingName);
+//
+//    }
 
 }

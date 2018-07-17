@@ -12,7 +12,7 @@ public class UserController {
     @RequestMapping("/")
     public String homePageLoggedIn() {
 
-        return "index(loggedIn)";
+        return "index";
     }
 
 	@GetMapping("/newmessage")

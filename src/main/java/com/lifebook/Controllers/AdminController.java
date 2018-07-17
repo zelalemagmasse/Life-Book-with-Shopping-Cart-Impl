@@ -10,7 +10,7 @@ public class AdminController {
     @RequestMapping("/")
     public String homePageAdmin() {
 
-        return "index(admin)";
+        return "index";
     }
 
 	@RequestMapping("/allmessages")

@@ -13,8 +13,10 @@ public class UserPost {
     private String imageUrl;
     private Date dateOfPost;
 
-    @ManyToMany(mappedBy = "posts")
-    private User creater;
+    @ManyToOne
+    private AppUserDetails creator;
+
+
     public UserPost() {
     }
 
@@ -58,23 +60,11 @@ public class UserPost {
         this.dateOfPost = dateOfPost;
     }
 
-    public User getCreater() {
-        return creater;
+    public AppUserDetails getCreator() {
+        return creator;
     }
 
-    public void setCreater(User creater) {
-        this.creater = creater;
-    }
-
-    @Override
-    public String toString() {
-        return "UserPost{" +
-                "id=" + id +
-                ", subject='" + subject + '\'' +
-                ", content='" + content + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", dateOfPost=" + dateOfPost +
-                ", creater=" + creater +
-                '}';
+    public void setCreator(AppUserDetails creator) {
+        this.creator = creator;
     }
 }
