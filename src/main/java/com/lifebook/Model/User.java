@@ -24,6 +24,17 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role>role;
 
+    public Set<Setting> getSetting() {
+        return setting;
+    }
+
+    public void setSetting(Set<Setting> setting) {
+        this.setting = setting;
+    }
+
+    @ManyToMany(mappedBy = "settingUser")
+    private Set<Setting> setting;
+
     public Set<UserPost> getPosts() {
         return posts;
     }
@@ -88,6 +99,7 @@ public class User {
         this.followers = new HashSet<>();
         this.role = new HashSet<>();
         this.posts = new HashSet<>();
+        this.setting = new HashSet<>();
     }
     public void addRole(Role r){
         role.add(r);
