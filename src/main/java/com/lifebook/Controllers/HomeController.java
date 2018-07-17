@@ -23,7 +23,7 @@ public class HomeController {
 	@PostMapping("/login")
 	public String loggedIn() {
 
-		return "redirect:/account/";
+		return "redirect:/users/";
 	}
 
 	@GetMapping("/register")
