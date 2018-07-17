@@ -1,12 +1,11 @@
 package com.lifebook.Model;
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class User {
+public class AppUser {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
@@ -19,7 +18,7 @@ public class User {
     @ManyToMany()
     private Set<Following> following;
     @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Role>role;
+    private Set<AppRole> role;
 
     @OneToOne(mappedBy = "user")
     private AppUserDetails appUserDetails;
@@ -27,7 +26,7 @@ public class User {
     @ManyToMany(mappedBy = "settingUser")
     private Set<Setting> setting;
 
-    public User() {
+    public AppUser() {
         this.following = new HashSet<>();
         this.role = new HashSet<>();
     }
@@ -64,11 +63,11 @@ public class User {
         this.following = following;
     }
 
-    public Set<Role> getRole() {
+    public Set<AppRole> getAppRole() {
         return role;
     }
 
-    public void setRole(Set<Role> role) {
+    public void setAppRole(Set<AppRole> role) {
         this.role = role;
     }
 
@@ -78,5 +77,13 @@ public class User {
 
     public void setSetting(Set<Setting> setting) {
         this.setting = setting;
+    }
+
+    public AppUserDetails getAppUserDetails() {
+        return appUserDetails;
+    }
+
+    public void setAppUserDetails(AppUserDetails appUserDetails) {
+        this.appUserDetails = appUserDetails;
     }
 }

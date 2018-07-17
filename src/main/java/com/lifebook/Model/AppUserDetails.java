@@ -16,7 +16,7 @@ public class AppUserDetails {
     @NotEmpty(message = "Please provide an e-mail")
     private String email;
     @OneToOne ()
-    private User user;
+    private AppUser user;
     @OneToOne(mappedBy = "appUserDetails")
     private Following following;
 
@@ -39,11 +39,11 @@ public class AppUserDetails {
         this.email = email;
     }
 
-    public User getUser() {
+    public AppUser getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(AppUser user) {
         this.user = user;
     }
 

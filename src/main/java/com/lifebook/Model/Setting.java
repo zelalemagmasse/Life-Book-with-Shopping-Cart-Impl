@@ -12,7 +12,7 @@ public class Setting {
     private String newsType;
 
     @ManyToMany
-    private Set<User> settingUser;
+    private Set<AppUser> settingUser;
 
     public long getId() {
         return id;
@@ -30,11 +30,11 @@ public class Setting {
         this.newsType = newsType;
     }
 
-    public Set<User> getSettingUser() {
+    public Set<AppUser> getSettingUser() {
         return settingUser;
     }
 
-    public void setSettingUser(Set<User> settingUser) {
+    public void setSettingUser(Set<AppUser> settingUser) {
         this.settingUser = settingUser;
     }
 

@@ -1,21 +1,27 @@
 package com.lifebook.Model;
 
-import com.lifebook.Model.User;
-
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Role {
+public class AppRole {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
     @Column(unique = true)
     private String role;
+
+    @ManyToMany(mappedBy = "role")
+    private List<AppUser> userslist;
+
+    public AppRole() {
+    }
+
     public long getId() {
         return id;
     }
+
     public void setId(long id) {
         this.id = id;
     }
@@ -28,15 +34,11 @@ public class Role {
         this.role = role;
     }
 
-    public List<User> getUserslist() {
+    public List<AppUser> getUserslist() {
         return userslist;
     }
 
-    public void setUserslist(List<User> userslist) {
+    public void setUserslist(List<AppUser> userslist) {
         this.userslist = userslist;
-    }
-    @ManyToMany(mappedBy = "role")
-    private List<User> userslist;
-    public Role() {
     }
 }

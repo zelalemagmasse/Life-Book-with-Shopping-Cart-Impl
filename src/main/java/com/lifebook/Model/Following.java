@@ -11,7 +11,7 @@ public class Following {
     private long id;
 
     @ManyToMany (mappedBy = "following")
-    private Set<User> users;
+    private Set<AppUser> users;
 
     @OneToOne()
     AppUserDetails appUserDetails;
@@ -28,11 +28,11 @@ public class Following {
         this.id = id;
     }
 
-    public Set<User> getUsers() {
+    public Set<AppUser> getUsers() {
         return users;
     }
 
-    public void setUsers(Set<User> users) {
+    public void setUsers(Set<AppUser> users) {
         this.users = users;
     }
 
