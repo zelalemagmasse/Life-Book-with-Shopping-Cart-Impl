@@ -53,7 +53,7 @@ public class UserController {
     public String userProfile(Model model) {
         AppUser user = appUserRepository.findByUserName("u");
         model.addAttribute("currentuser", user);
-        user.setDetail(new AppUserDetails());
+        //user.setDetail(new AppUserDetails());
         //Add information for the post form
         UserPost post = new UserPost();
         post.setCreator(appUserRepository.findByUserName(user.getUserName()).getDetail());
