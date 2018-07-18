@@ -105,8 +105,6 @@ public class HomeController {
 
 	@PostMapping("/register")
 	public String completeRegistration(@Valid @ModelAttribute("user") AppUser user) {
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        user.setPassword(encoder.encode(user.getPassword()));
         AppUserDetails detail = user.getDetail();
         appUserDetailsRepository.save(detail);
         appUserRepository.save(user);

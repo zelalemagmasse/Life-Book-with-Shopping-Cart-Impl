@@ -48,9 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .formLogin()
-                .loginPage("/login")
-                .permitAll(true)
+                .formLogin().loginPage("/login").permitAll()
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login?logout").permitAll();
 
@@ -67,15 +65,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-    @Bean
-    WebMvcConfigurer myWebMvcConfigurer() {
-        return new WebMvcConfigurer() {
-
-            @Override
-            public void addViewControllers(ViewControllerRegistry registry) {
-                ViewControllerRegistration r = registry.addViewController("/login");
-                r.setViewName("login");
-            }
-        };
-    }
+//    @Bean
+//    WebMvcConfigurer myWebMvcConfigurer() {
+//        return new WebMvcConfigurer() {
+//
+//            @Override
+//            public void addViewControllers(ViewControllerRegistry registry) {
+//                ViewControllerRegistration r = registry.addViewController("/login");
+//                r.setViewName("login");
+//            }
+//        };
+//    }
 }

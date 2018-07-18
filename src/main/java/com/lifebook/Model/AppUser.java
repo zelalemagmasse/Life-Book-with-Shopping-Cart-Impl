@@ -1,4 +1,6 @@
 package com.lifebook.Model;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -45,7 +47,8 @@ public class AppUser {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+
+        this.password = new BCryptPasswordEncoder().encode(password);
     }
 
     public String getUserName() {
