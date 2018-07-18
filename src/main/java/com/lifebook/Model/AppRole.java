@@ -1,7 +1,8 @@
 package com.lifebook.Model;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class AppRole {
@@ -13,9 +14,10 @@ public class AppRole {
     private String role;
 
     @ManyToMany(mappedBy = "role")
-    private List<AppUser> userslist;
+    private Set<AppUser> userslist;
 
     public AppRole() {
+        this.userslist = new HashSet<>();
     }
 
     public long getId() {
@@ -34,11 +36,11 @@ public class AppRole {
         this.role = role;
     }
 
-    public List<AppUser> getUserslist() {
+    public Set<AppUser> getUserslist() {
         return userslist;
     }
 
-    public void setUserslist(List<AppUser> userslist) {
+    public void setUserslist(Set<AppUser> userslist) {
         this.userslist = userslist;
     }
 }

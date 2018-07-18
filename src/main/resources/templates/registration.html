@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="www.thymeleaf.org">
 <title>Registration</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -59,10 +59,12 @@
             <div class="w3-col m12">
                 <div class="w3-card w3-round w3-white">
                     <div class="w3-container w3-padding">
+                        <form th:object = ${user}>
                         <p contenteditable="true" class="w3-border w3-padding">Username</p>
                         <p contenteditable="true" class="w3-border w3-padding">Password</p>
                         <p contenteditable="true" class="w3-border w3-padding">Email</p>
                         <button type="button" class="w3-button w3-theme"><i class="fa fa-pencil"></i>  Register</button>
+                        </form>
                     </div>
                 </div>
             </div>
