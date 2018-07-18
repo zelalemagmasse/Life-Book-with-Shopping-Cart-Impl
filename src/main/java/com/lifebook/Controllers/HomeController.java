@@ -2,14 +2,15 @@ package com.lifebook.Controllers;
 
 import com.lifebook.Model.*;
 import com.lifebook.Repositories.*;
-import org.apache.tomcat.jni.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -35,7 +36,7 @@ public class HomeController {
 
     @RequestMapping("/")
     public String homePage() {
-        AppRole r = new AppRole();
+        /*AppRole r = new AppRole();
 
         r.setRole("USER");
         appRoleRepository.save(r);
@@ -77,12 +78,8 @@ public class HomeController {
 
         d.getPosts().add(p);
         appUserDetailsRepository.save(d);
-
-
-
-
-
-            return "index";
+*/
+           return "index";
     }
 
 	@GetMapping("/login")
@@ -99,16 +96,16 @@ public class HomeController {
 
 	@GetMapping("/register")
 	public String registration(Model model){
-        model.addAttribute("user", new User ());
+        model.addAttribute("user", new AppUser());
 
 		return "registration";
 	}
 
 	@PostMapping("/register")
-	public String completeRegistration() {
-
-		// Save new user here
-
+	public String completeRegistration(@Valid @ModelAttribute("user") AppUser user) {
+        AppUserDetails detail = user.getDetail();
+        appUserDetailsRepository.save(detail);
+        appUserRepository.save(user);
 		return "login";
 	}
 

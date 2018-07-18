@@ -13,10 +13,17 @@ public class AppUserDetails {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
 
-    @OneToOne(mappedBy = "details")
+    private String fullName;
+
+    @Column(name = "email", nullable = false, unique = true)
+    @Email(message = "Please provide a valid e-mail")
+    @NotEmpty(message = "Please provide an e-mail")
+    private String email;
+
+    @OneToOne(mappedBy = "detail")
     private AppUser currentUser;
 
-    @OneToMany(mappedBy = "details")
+    @OneToMany(mappedBy = "detail")
     private Set<AppUser> followers;
 
     @OneToMany(mappedBy = "creator")
@@ -37,6 +44,22 @@ public class AppUserDetails {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public AppUser getCurrentUser() {
