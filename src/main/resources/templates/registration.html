@@ -1,15 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="www.thymeleaf.org">
-<title>Registration</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css">
-<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-    html,body,h1,h2,h3,h4,h5 {font-family: "Open Sans", sans-serif}
-</style>
+<head>
+    <title>Registration</title>
+    <th:block th:replace="base :: headstuff"></th:block>
+</head>
 <body class="w3-theme-l5">
 
 <!-- Navbar -->
@@ -60,17 +54,17 @@
                 <div class="w3-card w3-round w3-white">
                     <div class="w3-container w3-padding">
                         <form th:object = ${user} th:action="@{/register}" method="post">
-                        <input type="hidden" th:field="*{id}">
-                        <label>Full Name</label>
-                        <input type="text" class="w3-input w3-border w3-padding" th:field="*{detail.fullName}"><br/>
-                        <label>Username</label>
-                        <input type="text" class="w3-input w3-border w3-padding" th:field="*{userName}"><br/>
-                        <label>Password</label>
-                        <input type="text" class="w3-input w3-border w3-padding" th:field="*{password}"><br/>
-                        <label>Email</label>
-                        <input type="email" class="w3-input w3-border w3-padding"
-                               placeholder="example@domain.com" th:field="*{detail.email}"><br/>
-                        <button type="submit" class="w3-button w3-theme"><i class="fa fa-pencil"></i>  Register</button>
+                            <input type="hidden" th:field="*{id}">
+                            <label>Full Name</label>
+                            <input type="text" class="w3-input w3-border w3-padding" th:field="*{detail.fullName}"><br/>
+                            <label>Username</label>
+                            <input type="text" class="w3-input w3-border w3-padding" th:field="*{userName}"><br/>
+                            <label>Password</label>
+                            <input type="text" class="w3-input w3-border w3-padding" th:field="*{password}"><br/>
+                            <label>Email</label>
+                            <input type="email" class="w3-input w3-border w3-padding"
+                                   placeholder="example@domain.com" th:field="*{detail.email}"><br/>
+                            <button type="submit" class="w3-button w3-theme"><i class="fa fa-pencil"></i>  Register</button>
                         </form>
                     </div>
                 </div>
@@ -88,35 +82,10 @@
 <!-- <footer class="w3-container w3-theme-d3 w3-padding-16">
   <h5>Footer</h5>
 </footer>
-
 <footer class="w3-container w3-theme-d5">
   <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
 </footer> -->
 
-<script>
-    // Accordion
-    function myFunction(id) {
-        var x = document.getElementById(id);
-        if (x.className.indexOf("w3-show") == -1) {
-            x.className += " w3-show";
-            x.previousElementSibling.className += " w3-theme-d1";
-        } else {
-            x.className = x.className.replace("w3-show", "");
-            x.previousElementSibling.className =
-                x.previousElementSibling.className.replace(" w3-theme-d1", "");
-        }
-    }
-
-    // Used to toggle the menu on smaller screens when clicking on the menu button
-    function openNav() {
-        var x = document.getElementById("navDemo");
-        if (x.className.indexOf("w3-show") == -1) {
-            x.className += " w3-show";
-        } else {
-            x.className = x.className.replace(" w3-show", "");
-        }
-    }
-</script>
-
+<th:block th:replace="base :: jslinks"></th:block>
 </body>
 </html> 
