@@ -23,59 +23,38 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-
-
     @Autowired
-    private AppUserRepository userRepository;
-    @Bean
-    public PasswordEncoder encoder(){
-        return new BCryptPasswordEncoder();
-    }
+    AppUserRepository userRepository;
 
     @Override
-    public UserDetailsService userDetailsServiceBean() throws Exception{
+    public UserDetailsService userDetailsServiceBean() throws Exception {
         return new SSUDS(userRepository);
     }
 
-
     @Override
-    protected void configure(HttpSecurity http) throws Exception{
+    protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/index").permitAll()
-                .antMatchers("/register").permitAll()
-                .antMatchers("/h2-console/**").permitAll()
-                .anyRequest()
-                .authenticated()
+                .antMatchers("/", "/register", "/error").permitAll()
+                .antMatchers("/css/**", "/js/**").permitAll()
+                .antMatchers("/users/**").permitAll()
+                //.antMatchers("/users/**").hasAuthority("USER")
+                //.antMatchers("/h2/**", "/admin/**").hasAuthority("ADMIN")
+                .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                .loginPage("/login")
-                .permitAll(true)
+                .formLogin().loginPage("/login").permitAll()
                 .and()
-                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login?logout").permitAll();
+                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/login?logout").permitAll().permitAll();
 
-
-        http.headers().frameOptions().disable();
         http.csrf().disable();
 
+        http.headers().frameOptions().disable();
     }
+
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception{
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        auth.userDetailsService(userDetailsServiceBean()).passwordEncoder(encoder);
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsServiceBean()).passwordEncoder(new BCryptPasswordEncoder());
     }
 
-
-    @Bean
-    WebMvcConfigurer myWebMvcConfigurer() {
-        return new WebMvcConfigurer() {
-
-            @Override
-            public void addViewControllers(ViewControllerRegistry registry) {
-                ViewControllerRegistration r = registry.addViewController("/login");
-                r.setViewName("login");
-            }
-        };
-    }
 }
