@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="www.thymeleaf.org">
 <title>W3.CSS Template</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -52,9 +52,9 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Open Sans", sans-serif}
          <h4 class="w3-center">My Profile</h4>
          <p class="w3-center"><img src="/w3images/avatar3.png" class="w3-circle" style="height:106px;width:106px" alt="Avatar"></p>
          <hr>
-         <p><i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i> Designer, UI</p>
-         <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i> London, UK</p>
-         <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i> April 1, 1988</p>
+         <p th:inline="text"><i class="fa fa-user fa-fw w3-margin-right w3-text-theme"></i> [[${currentuser.detail.fullName}]]</p>
+         <p th:inline="text"><i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i> [[${currentuser.detail.email}]]</p>
+         <!--<p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i> April 1, 1988</p>-->
         </div>
       </div>
       <br>
@@ -80,9 +80,15 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Open Sans", sans-serif}
         <div class="w3-col m12">
           <div class="w3-card w3-round w3-white">
             <div class="w3-container w3-padding">
-              <h6 class="w3-opacity">Social Media template by w3.css</h6>
-              <p contenteditable="true" class="w3-border w3-padding">Status: Feeling Blue</p>
-              <button type="button" class="w3-button w3-theme"><i class="fa fa-pencil"></i>  Post</button> 
+              <h6 class="w3-opacity"></h6>
+              <form th:action="@{/users/newmessage}" th:object =${post} method="post">
+                <label>Subject:</label>
+                  <input type="text" class="w3-input w3-border w3-padding" th:field="*{subject}"><br/>
+                <label>Post</label>
+                  <textarea class="w3-input w3-border w3-padding" th:field = "*{content}"></textarea><br/>
+                <label>Picture</label>
+                <input type="text" class="w3-input w3-border w3-padding"><br/>
+              <button type="submit" class="w3-button w3-theme"><i class="fa fa-pencil"></i>  Post</button>
             </div>
           </div>
         </div>
