@@ -19,17 +19,14 @@ public class AppUser {
     @NotEmpty(message = "Please provide a username")
     private String userName;
 
-    @Column(name = "email", nullable = false, unique = true)
-    @Email(message = "Please provide a valid e-mail")
-    @NotEmpty(message = "Please provide an e-mail")
-    private String email;
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<AppRole> role;
 
     @ManyToOne
     @OneToOne
-    private AppUserDetails details;
+    private AppUserDetails detail;
 
     public AppUser() {
         this.role = new HashSet<>();
@@ -67,19 +64,12 @@ public class AppUser {
         this.role = role;
     }
 
-    public AppUserDetails getDetails() {
-        return details;
+    public AppUserDetails getDetail() {
+        return detail;
     }
 
-    public void setDetails(AppUserDetails details) {
-        this.details = details;
+    public void setDetail(AppUserDetails detail) {
+        this.detail = detail;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }
