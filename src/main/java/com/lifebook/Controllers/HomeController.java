@@ -3,6 +3,8 @@ package com.lifebook.Controllers;
 import com.lifebook.Model.*;
 import com.lifebook.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -103,6 +105,8 @@ public class HomeController {
 
 	@PostMapping("/register")
 	public String completeRegistration(@Valid @ModelAttribute("user") AppUser user) {
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(encoder.encode(user.getPassword()));
         AppUserDetails detail = user.getDetail();
         appUserDetailsRepository.save(detail);
         appUserRepository.save(user);
