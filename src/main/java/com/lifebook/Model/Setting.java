@@ -11,8 +11,8 @@ public class Setting {
     public long id;
     private String newsType;
 
-    @ManyToMany
-    private Set<AppUser> settingUser;
+    @ManyToOne
+    private AppUserDetails settingUser;
 
     public long getId() {
         return id;
@@ -30,17 +30,12 @@ public class Setting {
         this.newsType = newsType;
     }
 
-    public Set<AppUser> getSettingUser() {
+    public AppUserDetails getSettingUser() {
         return settingUser;
     }
 
-    public void setSettingUser(Set<AppUser> settingUser) {
+    public void setSettingUser(AppUserDetails settingUser) {
         this.settingUser = settingUser;
     }
-
-    public Setting() {
-        this.settingUser = new HashSet<>();
-    }
-
 
 }
