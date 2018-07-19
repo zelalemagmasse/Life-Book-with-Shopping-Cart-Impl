@@ -35,10 +35,27 @@ public class CloudinaryConfig {
         }
     }
 
+    public String createUrl(String name) {
+        return cloudinary.url().transformation(new Transformation()
+                .width(100).height(100).crop("fill").radius(50)
+                .gravity("face")).generate(name);
+    }
+
+    public String createUrl(String name, int width, int height) {
+        return cloudinary.url().transformation(new Transformation()
+                .width(width).height(height).crop("fill").radius(50)
+                .gravity("face")).generate(name);
+    }
+
+    public String createSmallImage(String name, int width, int height) {
+        return cloudinary.url().transformation(new Transformation()
+                .width(width).height(height).crop("fill").radius(50)
+                .gravity("face")).type("fetch").generate(name);
+    }
+
     public String createUrl(String name, int width, int height, String action) {
         return cloudinary.url().transformation(new Transformation()
                 .width(width).height(height).border("2px_solid_black")
                 .crop(action)).imageTag(name);
     }
-
 }
