@@ -5,6 +5,7 @@ import com.lifebook.Model.AppUserDetails;
 import com.lifebook.Model.UserPost;
 import com.lifebook.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,59 +17,62 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/users")
 public class UserController {
     @Autowired
-    AppRoleRepository appRoleRepository;
+    AppRoleRepository roles;
 
     @Autowired
-    AppUserDetailsRepository appUserDetailsRepository;
+    AppUserDetailsRepository details;
 
 
     @Autowired
-    UserPostRepository userPostRepository;
+    UserPostRepository posts;
 
     @Autowired
-    SettingRepository settingRepository;
+    SettingRepository settings;
 
     @Autowired
-    AppUserRepository appUserRepository;
-
-
+    AppUserRepository users;
 
     @RequestMapping("/")
-    public String homePageLoggedIn() {
-        return "index";
+    public String homePageLoggedIn(Authentication authentication) {
+
+        if (users.findByUsername(authentication.getName()).getRoles().contains(roles.findByRole("ADMIN")))
+            return "redirect:/admin/";
+        else
+            return "index";
     }
 
-	@PostMapping("/newmessage")
-	public String sendMessage(@ModelAttribute("post") UserPost post) {
-        userPostRepository.save(post);
+    @PostMapping("/newmessage")
+    public String sendMessage(@ModelAttribute("post") UserPost post) {
+        posts.save(post);
 
-		return "redirect:/users/";
-	}
+        return "redirect:/users/";
+    }
 
-	@RequestMapping("/profile")
-    public String userProfile(Model model) {
-        AppUser user = appUserRepository.findByUserName("u");
+    @RequestMapping("/profile")
+    public String userProfile(Model model, Authentication authentication) {
+        AppUser user = users.findByUsername(authentication.getName());
         model.addAttribute("currentuser", user);
-        user.setDetail(new AppUserDetails());
+        //user.setDetail(new AppUserDetails());
         //Add information for the post form
         UserPost post = new UserPost();
-        post.setCreator(appUserRepository.findByUserName(user.getUserName()).getDetail());
+        post.setCreator(users.findByUsername(authentication.getName()).getDetail());
         model.addAttribute("post",post);
-		return "profile";
-	}
+        return "profile";
+    }
 
-	@RequestMapping("/following")
-    public String follwoingUsers() {
-		return "following";
-	}
+    @RequestMapping("/following")
+    public String followingUsers() {
+        return "following";
+    }
 
-	@RequestMapping("/weather")
+    @RequestMapping("/weather")
     public String weather() {
-		return "weather";
-	}
+        return "weather";
+    }
 
-	@RequestMapping("/news")
+    @RequestMapping("/news")
     public String news() {
-		return "weather";
-	}
+        return "news";
+    }
+
 }

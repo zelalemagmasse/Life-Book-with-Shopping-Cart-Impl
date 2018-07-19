@@ -13,11 +13,11 @@ public class AppRole {
     @Column(unique = true)
     private String role;
 
-    @ManyToMany(mappedBy = "role")
-    private Set<AppUser> userslist;
+    @ManyToMany(mappedBy = "roles")
+    private Set<AppUser> users;
 
     public AppRole() {
-        this.userslist = new HashSet<>();
+        this.users = new HashSet<>();
     }
 
     public long getId() {
@@ -36,11 +36,11 @@ public class AppRole {
         this.role = role;
     }
 
-    public Set<AppUser> getUserslist() {
-        return userslist;
+    public Set<AppUser> getUsers() {
+        return users;
     }
 
-    public void setUserslist(Set<AppUser> userslist) {
-        this.userslist = userslist;
+    public void setUsers(Set<AppUser> users) {
+        this.users = users;
     }
 }

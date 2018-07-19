@@ -11,13 +11,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-
 
 @Configuration
 @EnableWebSecurity
@@ -36,12 +33,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/", "/register", "/error").permitAll()
                 .antMatchers("/css/**", "/js/**").permitAll()
-                .antMatchers("/users/**").permitAll()
-                //.antMatchers("/users/**").hasAuthority("USER")
-                //.antMatchers("/h2/**", "/admin/**").hasAuthority("ADMIN")
+                .antMatchers("/users/**").hasAnyAuthority("USER", "ADMIN")
+                .antMatchers("/h2/**", "/admin/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage("/login").permitAll()
+                .formLogin().loginPage("/login").defaultSuccessUrl("/users/", true).permitAll()
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login?logout").permitAll().permitAll();
@@ -57,4 +53,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsServiceBean()).passwordEncoder(new BCryptPasswordEncoder());
     }
 
+    /*@Bean
+    public WebMvcConfigurer myWebMvcConfigurer() {
+        return new WebMvcConfigurer() {
+
+            @Override
+            public void addViewControllers(ViewControllerRegistry registry) {
+                ViewControllerRegistration r = registry.addViewController("/login");
+                r.setViewName("login");
+
+                ViewControllerRegistration denied = registry.addViewController("/403");
+                denied .setViewName("403");
+
+            }
+        };
+    }
+*/
 }

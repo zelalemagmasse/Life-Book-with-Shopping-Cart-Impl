@@ -1,4 +1,6 @@
 package com.lifebook.Model;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -17,19 +19,17 @@ public class AppUser {
 
     @Column(name = "userName", nullable = false, unique = true)
     @NotEmpty(message = "Please provide a username")
-    private String userName;
-
-
+    private String username;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private Set<AppRole> role;
+    private Set<AppRole> roles;
 
     @ManyToOne
     @OneToOne
     private AppUserDetails detail;
 
     public AppUser() {
-        this.role = new HashSet<>();
+        this.roles = new HashSet<>();
     }
 
     public long getId() {
@@ -45,23 +45,23 @@ public class AppUser {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = new BCryptPasswordEncoder().encode(password);
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public Set<AppRole> getAppRole() {
-        return role;
+    public Set<AppRole> getRoles() {
+        return roles;
     }
 
-    public void setAppRole(Set<AppRole> role) {
-        this.role = role;
+    public void setRoles(Set<AppRole> roles) {
+        this.roles = roles;
     }
 
     public AppUserDetails getDetail() {
