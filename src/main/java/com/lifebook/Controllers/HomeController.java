@@ -72,7 +72,7 @@ public class HomeController {
     }
 
     @PostConstruct
-    public void loadData(){
+    public void loadData() {
 
         AppRole admin = new AppRole();
         admin.setRole("ADMIN");
@@ -85,5 +85,4 @@ public class HomeController {
         users.save(adminLogin);
 
     }
-
 }
