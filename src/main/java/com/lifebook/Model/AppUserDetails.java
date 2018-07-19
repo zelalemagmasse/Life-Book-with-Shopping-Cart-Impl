@@ -20,6 +20,8 @@ public class AppUserDetails {
     @NotEmpty(message = "Please provide an e-mail")
     private String email;
 
+    private String profilePic;
+
     @OneToOne(mappedBy = "detail")
     private AppUser currentUser;
 
@@ -60,6 +62,14 @@ public class AppUserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
     }
 
     public AppUser getCurrentUser() {

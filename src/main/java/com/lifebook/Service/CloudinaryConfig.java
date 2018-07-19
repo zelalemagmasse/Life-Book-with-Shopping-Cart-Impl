@@ -37,8 +37,7 @@ public class CloudinaryConfig {
 
     public String createUrl(String name) {
         return cloudinary.url().transformation(new Transformation()
-                .width(100).height(100).crop("fill").radius(50)
-                .gravity("face")).generate(name);
+                .width(100).height(100)).generate(name);
     }
 
     public String createUrl(String name, int width, int height) {

@@ -2,23 +2,24 @@ package com.lifebook.Controllers;
 
 import com.cloudinary.utils.ObjectUtils;
 import com.lifebook.Model.AppUser;
+import com.lifebook.Model.AppUserDetails;
 import com.lifebook.Model.UserPost;
 import com.lifebook.Repositories.*;
 import com.lifebook.Service.CloudinaryConfig;
+import com.lifebook.Service.FollowingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/users")
@@ -29,6 +30,8 @@ public class UserController {
     @Autowired
     AppUserDetailsRepository details;
 
+    @Autowired
+    FollowingService followingService;
 
     @Autowired
     UserPostRepository posts;
@@ -43,12 +46,23 @@ public class UserController {
     CloudinaryConfig cloudc;
 
     @RequestMapping("/")
-    public String homePageLoggedIn(Authentication authentication) {
+    public String homePageLoggedIn(Authentication authentication, Model model) {
 
-        if (users.findByUsername(authentication.getName()).getRoles().contains(roles.findByRole("ADMIN")))
+        if (users.findByUsername(authentication.getName()).getRoles().contains(roles.findByRole("ADMIN"))) {
             return "redirect:/admin/";
-        else
+        }
+        else {
+            /*AppUser sessionUser =users.findByUsername(authentication.getName());
+            AppUserDetails ud = sessionUser.getDetail();
+            Set<AppUser> following = ud.getFollowers();
+            List<UserPost> posts = new ArrayList<>();
+            for (AppUser u: following) {
+                posts.add()
+            }
+            model.addAttribute("posts", );
+            return "allposts";*/
             return "index";
+        }
     }
 
     @PostMapping("/newmessage")
@@ -86,8 +100,18 @@ public class UserController {
         //Add information for the post form
         UserPost post = new UserPost();
         model.addAttribute("post",post);
-        model.addAttribute("posts", posts.findAll());
+        model.addAttribute("posts", posts.findAllByOrderByIdDesc());
         return "profile";
+    }
+
+    @RequestMapping("/detail/{id}")
+    public String showJob (@PathVariable("id") long id, Authentication auth) {
+
+        AppUserDetails detail = details.findById(id).get();
+        AppUser sessionUser = users.findByUsername(auth.getName());
+        sessionUser.getDetail().getFollowers().add(detail.getCurrentUser());
+        users.save(sessionUser);
+        return "redirect:/users/profile";
     }
 
     @RequestMapping("/following")
@@ -103,5 +127,11 @@ public class UserController {
     @RequestMapping("/news")
     public String news() {
         return "news";
+    }
+
+    @RequestMapping("/findpost")
+    public String showResults(HttpServletRequest request, Model model) {
+        model.addAttribute("posts", posts.findAllByContentContains(request.getParameter("query")));
+        return "results";
     }
 }

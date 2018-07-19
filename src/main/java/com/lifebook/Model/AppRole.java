@@ -10,7 +10,7 @@ public class AppRole {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
-    @Column(unique = true)
+
     private String role;
 
     @ManyToMany(mappedBy = "roles")

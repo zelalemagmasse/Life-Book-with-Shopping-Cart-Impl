@@ -1,7 +1,9 @@
 package com.lifebook.Controllers;
 
+import com.cloudinary.utils.ObjectUtils;
 import com.lifebook.Model.*;
 import com.lifebook.Repositories.*;
+import com.lifebook.Service.CloudinaryConfig;
 import com.lifebook.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -10,15 +12,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Map;
 
 @Controller
 public class HomeController {
@@ -40,6 +42,9 @@ public class HomeController {
     @Autowired
     AppUserRepository users;
 
+    @Autowired
+    CloudinaryConfig cloudc;
+
 
     @RequestMapping("/")
     public String homePage() {
@@ -60,13 +65,30 @@ public class HomeController {
     @PostMapping("/register")
     public String processRegistrationPage(
             @Valid @ModelAttribute("user") AppUser user,
+            @RequestParam("file") MultipartFile file,
             BindingResult result, Model model) {
         model.addAttribute("user", user);
         if (result.hasErrors()) {
             return "registration";
         } else {
-            userService.saveUser(user);
-            model.addAttribute("message", "User Account Successfully Created");
+            if (file.isEmpty()) {
+                user.getDetail().setProfilePic("/img/user.png");
+                userService.saveUser(user);
+                return "redirect:/login";
+            }
+            else {
+                try {
+                    Map uploadResult = cloudc.upload(file.getBytes(), ObjectUtils.asMap("resourcetype", "auto"));
+                    String uploadedName = (String) uploadResult.get("public_id");
+
+                    String transformedImage = cloudc.createUrl(uploadedName);
+                    user.getDetail().setProfilePic(transformedImage);
+                    userService.saveUser(user);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return "redirect:/login";
+                }
+            }
         }
         return "redirect:/login";
     }
