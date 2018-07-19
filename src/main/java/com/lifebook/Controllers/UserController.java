@@ -43,7 +43,8 @@ public class UserController {
     }
 
     @PostMapping("/newmessage")
-    public String sendMessage(@ModelAttribute("post") UserPost post) {
+    public String sendMessage(@ModelAttribute("post") UserPost post, Authentication authentication) {
+        post.setCreator(users.findByUsername(authentication.getName()).getDetail());
         posts.save(post);
 
         return "redirect:/users/";
@@ -56,8 +57,8 @@ public class UserController {
         //user.setDetail(new AppUserDetails());
         //Add information for the post form
         UserPost post = new UserPost();
-        post.setCreator(users.findByUsername(authentication.getName()).getDetail());
         model.addAttribute("post",post);
+        model.addAttribute("posts", posts.findAll());
         return "profile";
     }
 
