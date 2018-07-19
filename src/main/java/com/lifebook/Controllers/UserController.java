@@ -58,6 +58,7 @@ public class UserController {
         UserPost post = new UserPost();
         post.setCreator(users.findByUsername(authentication.getName()).getDetail());
         model.addAttribute("post",post);
+        model.addAttribute("posts", posts.findAll());
         return "profile";
     }
 
