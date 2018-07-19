@@ -75,13 +75,14 @@
           <div class="w3-card w3-round w3-white">
             <div class="w3-container w3-padding">
               <h6 class="w3-opacity"></h6>
-              <form th:action="@{/users/newmessage}" th:object =${post} method="post">
+              <form th:action="@{/users/newmessage}" th:object =${post}
+                    method="post" enctype="multipart/form-data">
                 <label>Subject:</label>
                 <input type="text" class="w3-input w3-border w3-padding" th:field="*{subject}"><br/>
                 <label>Post</label>
                 <textarea class="w3-input w3-border w3-padding" th:field = "*{content}"></textarea><br/>
                 <label>Picture</label>
-                <input type="text" class="w3-input w3-border w3-padding"><br/>
+                <input type="file" name ="file" class="w3-input w3-border w3-padding"><br/>
                 <button type="submit" class="w3-button w3-theme"><i class="fa fa-pencil"></i>  Post</button>
               </form>
             </div>

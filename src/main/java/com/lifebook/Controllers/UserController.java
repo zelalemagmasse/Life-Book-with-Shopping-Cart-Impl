@@ -1,8 +1,10 @@
 package com.lifebook.Controllers;
 
+import com.cloudinary.utils.ObjectUtils;
 import com.lifebook.Model.AppUser;
 import com.lifebook.Model.UserPost;
 import com.lifebook.Repositories.*;
+import com.lifebook.Service.CloudinaryConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -10,9 +12,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/users")
@@ -33,6 +39,9 @@ public class UserController {
     @Autowired
     AppUserRepository users;
 
+    @Autowired
+    CloudinaryConfig cloudc;
+
     @RequestMapping("/")
     public String homePageLoggedIn(Authentication authentication) {
 
@@ -43,11 +52,30 @@ public class UserController {
     }
 
     @PostMapping("/newmessage")
-    public String sendMessage(@ModelAttribute("post") UserPost post, Authentication authentication) {
+    public String sendMessage(@ModelAttribute("post") UserPost post,
+                              @RequestParam("file") MultipartFile file, Authentication authentication) {
         post.setCreator(users.findByUsername(authentication.getName()).getDetail());
-        posts.save(post);
+        if (file.isEmpty()) {
+            post.setImageUrl("/img/user.png");
+            posts.save(post);
+            return "redirect:/users/profile";
+        }
+        else {
+            try {
+                Map uploadResult = cloudc.upload(file.getBytes(), ObjectUtils.asMap("resourcetype", "auto"));
+                String uploadedName = (String) uploadResult.get("public_id");
 
-        return "redirect:/users/";
+                String transformedImage = cloudc.createUrl(uploadedName);
+                post.setImageUrl(transformedImage);
+                posts.save(post);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "redirect:/users/profile";
+            }
+        }
+
+        return "redirect:/users/profile";
     }
 
     @RequestMapping("/profile")
