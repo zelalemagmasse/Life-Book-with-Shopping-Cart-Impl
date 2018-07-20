@@ -12,5 +12,5 @@ import java.util.Set;
 public interface UserPostRepository extends CrudRepository<UserPost,Long>{
     Iterable<UserPost> findAllByOrderByIdDesc();
     Iterable<UserPost> findAllByContentContains(String query);
-    Iterable<UserPost> findByCreatorContains(AppUserDetails following);
+
 }

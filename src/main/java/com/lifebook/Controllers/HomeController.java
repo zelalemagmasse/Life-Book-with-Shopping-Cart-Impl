@@ -93,6 +93,7 @@ public class HomeController {
         return "redirect:/login";
     }
 
+
     @PostConstruct
     public void loadData() {
 

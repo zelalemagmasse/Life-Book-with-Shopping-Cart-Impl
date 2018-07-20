@@ -21,6 +21,17 @@ public class AppUser {
     @NotEmpty(message = "Please provide a username")
     private String username;
 
+    private boolean suspended;
+
+    public boolean getSuspended() {
+        return suspended;
+    }
+
+    public void setSuspended(boolean suspended) {
+        this.suspended = suspended;
+    }
+
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<AppRole> roles;
 

@@ -34,8 +34,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/", "/register", "/error").permitAll()
                 .antMatchers("/css/**", "/js/**","/img/**").permitAll()
+                .antMatchers("/").hasAuthority("SUSPENDED")
                 .antMatchers("/users/**").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers("/h2/**", "/admin/**").hasAuthority("ADMIN")
+
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/login").defaultSuccessUrl("/users/", true).permitAll()

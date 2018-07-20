@@ -16,10 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @RequestMapping("/users")
@@ -46,32 +43,58 @@ public class UserController {
     CloudinaryConfig cloudc;
 
     @RequestMapping("/")
-    public String homePageLoggedIn(Authentication authentication, Model model) {
+    public String homePageLoggedIn(Authentication auth, Model model) {
 
-        if (users.findByUsername(authentication.getName()).getRoles().contains(roles.findByRole("ADMIN"))) {
+        if (users.findByUsername(auth.getName()).getRoles().contains(roles.findByRole("ADMIN"))) {
             return "redirect:/admin/";
         }
         else {
-            /*AppUser sessionUser =users.findByUsername(authentication.getName());
-            AppUserDetails ud = sessionUser.getDetail();
-            Set<AppUser> following = ud.getFollowers();
-            List<UserPost> posts = new ArrayList<>();
+            //Set<AppUser> following = users.findByUsername(auth.getName()).getDetail().getFollowers();
+            AppUser sessionUser=users.findByUsername(auth.getName());
+            AppUserDetails ud=sessionUser.getDetail();
+            Set<AppUser> following=ud.getFollowers();
+            Set<UserPost> postscont = new HashSet<>();
+           // System.out.println( users.findByUsername(auth.getName()).getDetail().getFollowers());
+
+
+
             for (AppUser u: following) {
-                posts.add()
+                //Set<UserPost>posting=u.getDetail().getPosts();
+
+
+
+                    postscont.addAll(u.getDetail().getPosts());
+                  //  System.out.println("This are the posts of the people i am following =" + postp.getContent());
+
+
+
+
+
             }
-            model.addAttribute("posts", );
-            return "allposts";*/
-            return "index";
+//            for(int i=0;i<postscont.size();i++){
+//                System.out.println(postscont.get(i).getContent());
+//
+//            }
+
+
+            model.addAttribute("posts",postscont );
+            return "allposts";
+
         }
     }
 
     @PostMapping("/newmessage")
     public String sendMessage(@ModelAttribute("post") UserPost post,
                               @RequestParam("file") MultipartFile file, Authentication authentication) {
-        post.setCreator(users.findByUsername(authentication.getName()).getDetail());
+
+        AppUserDetails udetail=users.findByUsername(authentication.getName()).getDetail();
+        post.setCreator(udetail);
+
         if (file.isEmpty()) {
             post.setImageUrl("/img/user.png");
             posts.save(post);
+            udetail.getPosts().add(post);
+            details.save(udetail);
             return "redirect:/users/profile";
         }
         else {
@@ -82,6 +105,8 @@ public class UserController {
                 String transformedImage = cloudc.createUrl(uploadedName);
                 post.setImageUrl(transformedImage);
                 posts.save(post);
+                udetail.getPosts().add(post);
+                details.save(udetail);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -105,13 +130,34 @@ public class UserController {
     }
 
     @RequestMapping("/detail/{id}")
-    public String showJob (@PathVariable("id") long id, Authentication auth) {
+    public String showJob (@PathVariable("id") long id, Authentication auth,Model model) {
 
-        AppUserDetails detail = details.findById(id).get();
+        AppUser userNow = users.findById(id).get();
+       // System.out.println(userNow.getUsername());
+
+        //System.out.println(" to be followed =" +detail.getFullName());
         AppUser sessionUser = users.findByUsername(auth.getName());
-        sessionUser.getDetail().getFollowers().add(detail.getCurrentUser());
+        //System.out.println("Session User= " + sessionUser.getUsername());
+
+        sessionUser.getDetail().getFollowers().add(userNow);
+       // System.out.println(sessionUser.getDetail().getFollowers());
+        //System.out.println(" detail.getCurrentUser =" +detail.getCurrentUser().getUsername());
+        Set<AppUser> following = sessionUser.getDetail().getFollowers();
+
+        for (AppUser u: following) {
+            System.out.println("This are the set of people i am following =" + u.getUsername());
+
+        }
+
         users.save(sessionUser);
-        return "redirect:/users/profile";
+        Set<AppUser> followi = users.findByUsername(auth.getName()).getDetail().getFollowers();
+        Set<UserPost> postscont = new HashSet<>();
+        for (AppUser u: followi) {
+                postscont.addAll(u.getDetail().getPosts());
+
+            }
+        model.addAttribute("posts",postscont);
+        return "allposts";
     }
 
     @RequestMapping("/following")
