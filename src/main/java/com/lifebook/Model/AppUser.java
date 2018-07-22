@@ -17,11 +17,99 @@ public class AppUser {
     @NotEmpty(message = "Please provide a password")
     private String password;
 
+    private String profilePic;
+
+    private String fullName;
+
+
+    private boolean myFriend=false;
+
+    private int noOfFriend=0;
+
+    public int getNoOfFriend() {
+        return noOfFriend;
+    }
+
+    public void setNoOfFriend(int noOfFriend) {
+        this.noOfFriend = noOfFriend;
+    }
+
+    public boolean isMyFriend() {
+        return myFriend;
+    }
+
+    public void setMyFriend(boolean myFriend) {
+        this.myFriend = myFriend;
+    }
+
+    public boolean isSuspended() {
+        return suspended;
+    }
+
+    @OneToMany(mappedBy = "creator")
+    private Set<UserPost> posts;
+
+    @OneToMany(mappedBy = "settingUser")
+    private Set<Setting> settings;
+
     @Column(name = "userName", nullable = false, unique = true)
     @NotEmpty(message = "Please provide a username")
     private String username;
 
+    @Column(name = "email", nullable = false,unique = true)
+    @Email(message = "Please provide a valid e-mail")
+    @NotEmpty(message = "Please provide an e-mail")
+    private String email;
+
     private boolean suspended;
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public Set<UserPost> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(Set<UserPost> posts) {
+        this.posts = posts;
+    }
+
+    public Set<Setting> getSettings() {
+        return settings;
+    }
+
+    public void setSettings(Set<Setting> settings) {
+        this.settings = settings;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Set<AppUser> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(Set<AppUser> following) {
+        this.following = following;
+    }
 
     public boolean getSuspended() {
         return suspended;
@@ -35,9 +123,9 @@ public class AppUser {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<AppRole> roles;
 
-    @ManyToOne
-    @OneToOne
-    private AppUserDetails detail;
+
+    @ManyToMany
+    private Set<AppUser> following;
 
     public AppUser() {
         this.roles = new HashSet<>();
@@ -75,12 +163,6 @@ public class AppUser {
         this.roles = roles;
     }
 
-    public AppUserDetails getDetail() {
-        return detail;
-    }
 
-    public void setDetail(AppUserDetails detail) {
-        this.detail = detail;
-    }
 
 }

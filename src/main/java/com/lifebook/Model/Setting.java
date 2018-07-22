@@ -11,8 +11,17 @@ public class Setting {
     public long id;
     private String newsType;
 
+    public AppUser getSettingUser() {
+        return settingUser;
+    }
+
+    public void setSettingUser(AppUser settingUser) {
+        this.settingUser = settingUser;
+    }
+
     @ManyToOne
-    private AppUserDetails settingUser;
+
+    private AppUser settingUser;
 
     public long getId() {
         return id;
@@ -30,12 +39,5 @@ public class Setting {
         this.newsType = newsType;
     }
 
-    public AppUserDetails getSettingUser() {
-        return settingUser;
-    }
-
-    public void setSettingUser(AppUserDetails settingUser) {
-        this.settingUser = settingUser;
-    }
 
 }

@@ -2,7 +2,6 @@ package com.lifebook.Controllers;
 
 import com.cloudinary.utils.ObjectUtils;
 import com.lifebook.Model.AppUser;
-import com.lifebook.Model.AppUserDetails;
 import com.lifebook.Model.UserPost;
 import com.lifebook.Repositories.*;
 import com.lifebook.Service.CloudinaryConfig;
@@ -16,7 +15,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/users")
@@ -24,8 +29,7 @@ public class UserController {
     @Autowired
     AppRoleRepository roles;
 
-    @Autowired
-    AppUserDetailsRepository details;
+
 
     @Autowired
     FollowingService followingService;
@@ -33,8 +37,6 @@ public class UserController {
     @Autowired
     UserPostRepository posts;
 
-    @Autowired
-    SettingRepository settings;
 
     @Autowired
     AppUserRepository users;
@@ -43,58 +45,35 @@ public class UserController {
     CloudinaryConfig cloudc;
 
     @RequestMapping("/")
-    public String homePageLoggedIn(Authentication auth, Model model) {
+    public String homePageLoggedIn(Authentication authentication, Model model) {
 
-        if (users.findByUsername(auth.getName()).getRoles().contains(roles.findByRole("ADMIN"))) {
+        if (users.findByUsername(authentication.getName()).getRoles().contains(roles.findByRole("ADMIN"))) {
             return "redirect:/admin/";
         }
         else {
-            //Set<AppUser> following = users.findByUsername(auth.getName()).getDetail().getFollowers();
-            AppUser sessionUser=users.findByUsername(auth.getName());
-            AppUserDetails ud=sessionUser.getDetail();
-            Set<AppUser> following=ud.getFollowers();
-            Set<UserPost> postscont = new HashSet<>();
-           // System.out.println( users.findByUsername(auth.getName()).getDetail().getFollowers());
-
-
-
+            AppUser sessionUser =users.findByUsername(authentication.getName());
+            Set<AppUser> following = sessionUser.getFollowing();
+            Set<UserPost> posts = sessionUser.getPosts();
             for (AppUser u: following) {
-                //Set<UserPost>posting=u.getDetail().getPosts();
-
-
-
-                    postscont.addAll(u.getDetail().getPosts());
-                  //  System.out.println("This are the posts of the people i am following =" + postp.getContent());
-
-
-
-
-
+                posts.addAll(u.getPosts());
             }
-//            for(int i=0;i<postscont.size();i++){
-//                System.out.println(postscont.get(i).getContent());
-//
-//            }
-
-
-            model.addAttribute("posts",postscont );
+            model.addAttribute("posts", posts);
             return "allposts";
-
         }
     }
 
     @PostMapping("/newmessage")
     public String sendMessage(@ModelAttribute("post") UserPost post,
                               @RequestParam("file") MultipartFile file, Authentication authentication) {
-
-        AppUserDetails udetail=users.findByUsername(authentication.getName()).getDetail();
-        post.setCreator(udetail);
-
+        post.setCreator(users.findByUsername(authentication.getName()));
         if (file.isEmpty()) {
             post.setImageUrl("/img/user.png");
             posts.save(post);
-            udetail.getPosts().add(post);
-            details.save(udetail);
+            Date today=new Date();
+
+           post.setDateOfPost(today.toString());
+            posts.save(post);
+           // System.out.println(postDate.toString());
             return "redirect:/users/profile";
         }
         else {
@@ -105,8 +84,10 @@ public class UserController {
                 String transformedImage = cloudc.createUrl(uploadedName);
                 post.setImageUrl(transformedImage);
                 posts.save(post);
-                udetail.getPosts().add(post);
-                details.save(udetail);
+                Date today=new Date();
+
+                post.setDateOfPost(today.toString());
+                posts.save(post);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -121,44 +102,35 @@ public class UserController {
     public String userProfile(Model model, Authentication authentication) {
         AppUser user = users.findByUsername(authentication.getName());
         model.addAttribute("currentuser", user);
-        //user.setDetail(new AppUserDetails());
-        //Add information for the post form
         UserPost post = new UserPost();
         model.addAttribute("post",post);
         model.addAttribute("posts", posts.findAllByOrderByIdDesc());
         return "profile";
     }
 
-    @RequestMapping("/detail/{id}")
-    public String showJob (@PathVariable("id") long id, Authentication auth,Model model) {
+    @RequestMapping("/follow/{id}")
+    public String follow (@PathVariable("id") long id, Authentication auth) {
 
-        AppUser userNow = users.findById(id).get();
-       // System.out.println(userNow.getUsername());
-
-        //System.out.println(" to be followed =" +detail.getFullName());
+        AppUser detail = users.findById(id).get();
         AppUser sessionUser = users.findByUsername(auth.getName());
-        //System.out.println("Session User= " + sessionUser.getUsername());
-
-        sessionUser.getDetail().getFollowers().add(userNow);
-       // System.out.println(sessionUser.getDetail().getFollowers());
-        //System.out.println(" detail.getCurrentUser =" +detail.getCurrentUser().getUsername());
-        Set<AppUser> following = sessionUser.getDetail().getFollowers();
-
-        for (AppUser u: following) {
-            System.out.println("This are the set of people i am following =" + u.getUsername());
-
-        }
-
+        detail.setMyFriend(true);
+        sessionUser.getFollowing().add(detail);
+        sessionUser.setNoOfFriend(sessionUser.getNoOfFriend()+ 1);
         users.save(sessionUser);
-        Set<AppUser> followi = users.findByUsername(auth.getName()).getDetail().getFollowers();
-        Set<UserPost> postscont = new HashSet<>();
-        for (AppUser u: followi) {
-                postscont.addAll(u.getDetail().getPosts());
-
-            }
-        model.addAttribute("posts",postscont);
-        return "allposts";
+        return "redirect:/users/profile";
     }
+    @RequestMapping("/unfollow/{id}")
+    public String unfollow (@PathVariable("id") long id, Authentication auth) {
+
+        AppUser detail = users.findById(id).get();
+        AppUser sessionUser = users.findByUsername(auth.getName());
+        detail.setMyFriend(false);
+        sessionUser.getFollowing().remove(detail);
+        sessionUser.setNoOfFriend(sessionUser.getNoOfFriend()- 1);
+        users.save(sessionUser);
+        return "redirect:/users/profile";
+    }
+
 
     @RequestMapping("/following")
     public String followingUsers() {

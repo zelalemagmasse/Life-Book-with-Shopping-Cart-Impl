@@ -27,8 +27,6 @@ public class HomeController {
     @Autowired
     AppRoleRepository roles;
 
-    @Autowired
-    AppUserDetailsRepository details;
 
     @Autowired
     UserService userService;
@@ -72,7 +70,7 @@ public class HomeController {
             return "registration";
         } else {
             if (file.isEmpty()) {
-                user.getDetail().setProfilePic("/img/user.png");
+                user.setProfilePic("/img/user.png");
                 userService.saveUser(user);
                 return "redirect:/login";
             }
@@ -82,7 +80,7 @@ public class HomeController {
                     String uploadedName = (String) uploadResult.get("public_id");
 
                     String transformedImage = cloudc.createUrl(uploadedName);
-                    user.getDetail().setProfilePic(transformedImage);
+                    user.setProfilePic(transformedImage);
                     userService.saveUser(user);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -94,16 +92,22 @@ public class HomeController {
     }
 
 
-    @PostConstruct
+   @PostConstruct
     public void loadData() {
 
         AppRole admin = new AppRole();
         admin.setRole("ADMIN");
         roles.save(admin);
 
+
+       AppRole user = new AppRole();
+       user.setRole("USER");
+       roles.save(user);
+
         AppUser adminLogin = new AppUser();
         adminLogin.setUsername("admin");
         adminLogin.setPassword("adminp");
+        adminLogin.setEmail("zola@gmail");
         adminLogin.getRoles().add(admin);
         users.save(adminLogin);
 

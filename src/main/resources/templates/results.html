@@ -74,8 +74,11 @@
           </div>
         </div>
         <!--<button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-thumbs-up"></i>  Like</button>-->
-        <a th:href="@{/users/detail/{id}(id=${aPost.creator.id})}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i>  Follow</button></a>
+        <a th:href="@{/users/follow/{id}(id=${aPost.creator.id})}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i>  FOLLOW</button></a>
+        <a th:href="@{/users/unfollow/{id}(id=${aPost.creator.id})}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i>  UNFOLLOW</button></a>
       </div>
+
+
 
       <!-- End Middle Column -->
     </div>

@@ -49,7 +49,7 @@ public class AdminController {
 	@RequestMapping("/suspend/{userId}")
 	public String suspend(@PathVariable String userId, Model model) {
 		AppUser user = users.findById(Long.parseLong(userId)).get();
-		user.setSuspended(true);
+	//	user.setSuspended(true);
 		users.save(user);
 		model.addAttribute("users", users.findAll());
 		return "displayusers";
@@ -58,7 +58,7 @@ public class AdminController {
 	@RequestMapping("/unsuspend/{userId}")
 	public String unsuspend(@PathVariable String userId, Model model) {
 		AppUser user = users.findById(Long.parseLong(userId)).get();
-		user.setSuspended(false);
+	//	user.setSuspended(false);
 		users.save(user);
 		model.addAttribute("users", users.findAll());
 		return "displayusers";

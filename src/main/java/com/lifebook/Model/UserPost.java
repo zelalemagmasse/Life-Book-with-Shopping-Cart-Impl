@@ -1,6 +1,8 @@
 package com.lifebook.Model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -11,10 +13,18 @@ public class UserPost {
     private String subject;
     private String content;
     private String imageUrl;
-    private Date dateOfPost;
+    private String  dateOfPost;
+
+    public String getDateOfPost() {
+        return dateOfPost;
+    }
+
+    public void setDateOfPost(String dateOfPost) {
+        this.dateOfPost = dateOfPost;
+    }
 
     @ManyToOne
-    private AppUserDetails creator;
+    private AppUser creator;
 
 
     public UserPost() {
@@ -52,19 +62,15 @@ public class UserPost {
         this.imageUrl = imageUrl;
     }
 
-    public Date getDateOfPost() {
-        return dateOfPost;
-    }
 
-    public void setDateOfPost(Date dateOfPost) {
-        this.dateOfPost = dateOfPost;
-    }
 
-    public AppUserDetails getCreator() {
+
+
+    public AppUser getCreator() {
         return creator;
     }
 
-    public void setCreator(AppUserDetails creator) {
+    public void setCreator(AppUser creator) {
         this.creator = creator;
     }
 }
