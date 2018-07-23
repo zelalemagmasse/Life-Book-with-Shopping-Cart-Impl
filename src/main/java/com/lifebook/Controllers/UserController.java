@@ -2,10 +2,12 @@ package com.lifebook.Controllers;
 
 import com.cloudinary.utils.ObjectUtils;
 import com.lifebook.Model.AppUser;
+import com.lifebook.Model.Interest;
 import com.lifebook.Model.UserPost;
 import com.lifebook.Repositories.*;
 import com.lifebook.Service.CloudinaryConfig;
 import com.lifebook.Service.FollowingService;
+import com.lifebook.Service.NewsService;
 import com.lifebook.Service.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -20,10 +22,8 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/users")
@@ -39,6 +39,8 @@ public class UserController {
     @Autowired
     UserPostRepository posts;
 
+    @Autowired
+    InterestRepository interests;
 
     @Autowired
     AppUserRepository users;
@@ -49,6 +51,9 @@ public class UserController {
     @Autowired
     WeatherService weatherService;
 
+    @Autowired
+    NewsService newsService;
+
     @RequestMapping("/")
     public String homePageLoggedIn(Authentication authentication, Model model) {
 
@@ -56,14 +61,19 @@ public class UserController {
             return "redirect:/admin/";
         }
         else {
-            AppUser sessionUser =users.findByUsername(authentication.getName());
-            Set<AppUser> following = sessionUser.getFollowing();
-            Set<UserPost> posts = sessionUser.getPosts();
-            for (AppUser u: following) {
-                posts.addAll(u.getPosts());
-            }
-            model.addAttribute("posts", posts);
-            return "allposts";
+
+            model.addAttribute("articles", newsService.personalized(authentication));
+            return "index";
+
+//            AppUser sessionUser =users.findByUsername(authentication.getName());
+//            Set<AppUser> following = sessionUser.getFollowing();
+//            Set<UserPost> posts = sessionUser.getPosts();
+//            for (AppUser u: following) {
+//                posts.addAll(u.getPosts());
+//            }
+//            model.addAttribute("posts", posts);
+//            return "allposts";
+
         }
     }
 
@@ -111,9 +121,27 @@ public class UserController {
         UserPost post = new UserPost();
         model.addAttribute("post",post);
 
-        model.addAttribute("weatherToday",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(0).getDay().getCondition().getText()) ;
+        model.addAttribute("weatherFirstDay",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(0).getDay().getCondition().getText()) ;
+        model.addAttribute("weatherSecondDay",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(1).getDay().getCondition().getText()) ;
+        model.addAttribute("weatherThirdDay",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(2).getDay().getCondition().getText()) ;
+        model.addAttribute("weatherFourthDay",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(3).getDay().getCondition().getText()) ;
+        model.addAttribute("weatherFifthDay",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(4).getDay().getCondition().getText()) ;
+        model.addAttribute("weatherSixthDay",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(5).getDay().getCondition().getText()) ;
+        model.addAttribute("weatherSeventhDay",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(6).getDay().getCondition().getText()) ;
 
-        model.addAttribute("posts", posts.findAllByOrderByIdDesc());
+        AppUser sessionUser =users.findByUsername(authentication.getName());
+            Set<AppUser> following = sessionUser.getFollowing();
+            List<UserPost> posts = new ArrayList<>(sessionUser.getPosts());
+            for (AppUser u: following) {
+                posts.addAll(u.getPosts());
+            }
+          Collections.reverse(posts);
+//            ArrayList<UserPost> reversePost = new ArrayList<>();
+//            for (int i = posts.size()-1; i>=0; i--){
+//                reversePost.add(post.get(i));
+//            }
+            model.addAttribute("posts", posts.toArray());
+//        model.addAttribute("posts", posts.findAllByOrderByIdDesc());
         return "profile";
     }
 
@@ -187,7 +215,7 @@ public class UserController {
 
     @RequestMapping("/findpost")
     public String showResults(HttpServletRequest request, Model model) {
-        model.addAttribute("posts", posts.findAllByContentContains(request.getParameter("query")));
+        model.addAttribute("posts", posts.findAllByContentContainingIgnoreCase(request.getParameter("query")));
         return "results";
     }
 }

@@ -10,10 +10,10 @@
 <div class="w3-top">
     <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
         <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
-        <a href="#" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><i class="fa fa-globe w3-margin-right"></i>LifeBook</a>
-        <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Account Settings"><i class="fa fa-user"></i></a>
-        <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Messages"><i class="fa fa-envelope"></i></a>
-        <a href="/login" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Login"><i class="fa fa-user"></i></a>
+        <a href="/" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><i class="fa fa-globe w3-margin-right"></i>LifeBook</a>
+        <!--<a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Account Settings"><i class="fa fa-user"></i></a>-->
+        <!--<a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Messages"><i class="fa fa-envelope"></i></a>-->
+        <a href="/login" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Login"><i class="fa fa-key"></i>Login</a>
         <div class="w3-dropdown-hover w3-hide-small w3-right">
             <button class="w3-button w3-padding-large" title="MyAccount"><!--<img src="/w3images/avatar2.png" class="w3-circle" style="height:23px;width:23px" alt="Avatar">--><span class="w3-badge w3-right w3-small w3-green"></span></button>
             <div class="w3-dropdown-content w3-bar-block" style="width:300px">
@@ -70,6 +70,14 @@
                                    placeholder="20992" th:field="*{zipCode}"><br/>
                             <label>Profile Picture</label>
                             <input type="file" name="file" class="w3-input w3-border w3-padding"><br/>
+                            <fieldset>
+                                <legend>Interests:</legend>
+                                <select class="form-control" th:field="*{interests}" multiple>
+                                    <option th:each ="interest:${interests}"
+                                            th:value="${interest.id}"
+                                            th:text="${interest.name}"></option>
+                                </select>
+                            </fieldset>
                             <button type="submit" class="w3-button w3-theme"><i class="fa fa-pencil"></i>Register</button>
                         </form>
                     </div>

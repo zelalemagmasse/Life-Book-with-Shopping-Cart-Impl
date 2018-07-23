@@ -4,6 +4,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -83,8 +84,8 @@ public class AppUser {
 
     private boolean suspended;
 
-
-
+    @ManyToMany ()
+    private Set<Interest> interests = new HashSet<>();
 
 
     public String getZipCode() {
@@ -159,6 +160,13 @@ public class AppUser {
         this.suspended = suspended;
     }
 
+    public Set<Interest> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(Set<Interest> interests) {
+        this.interests = interests;
+    }
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<AppRole> roles;

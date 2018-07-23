@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface UserPostRepository extends CrudRepository<UserPost,Long>{
     Iterable<UserPost> findAllByOrderByIdDesc();
-    Iterable<UserPost> findAllByContentContains(String query);
+    Iterable<UserPost> findAllByContentContainingIgnoreCase(String query);
     //UserPost findAllBy
 
 }

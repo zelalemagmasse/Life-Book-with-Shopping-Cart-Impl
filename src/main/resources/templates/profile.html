@@ -10,10 +10,8 @@
 <div class="w3-top">
     <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
         <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
-        <a href="#" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><i class="fa fa-globe w3-margin-right"></i>LifeBook</a>
-        <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Account Settings"><i class="fa fa-user"></i></a>
-        <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Messages"><i class="fa fa-envelope"></i></a>
-        <a href="/logout" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Logout"><i class="fa fa-user"></i></a>
+        <a href="/" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><i class="fa fa-globe w3-margin-right"></i>LifeBook</a>
+        <a href="/logout" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Logout"><i class="fa fa-window-close-o"></i>Logout</a>
         <div class="w3-hide-small w3-right">
 
             <form th:action="@{/users/findpost}">
@@ -66,9 +64,15 @@
             <!-- Interests -->
             <div class="w3-card w3-round w3-white w3-hide-small">
                 <div class="w3-container">
-                    <p>Interests</p>
+                    <p>Weather conditions for the next 7 days:</p>
                     <p>
-                        <span class="w3-tag w3-small w3-theme-d5" th:text="${weatherToday}"></span>
+                    <div><span><strong>Day 1:</strong></span> </span><span th:text="${weatherFirstDay}"></span></div>
+                    <div><span><strong>Day 2:</strong></span> </span><span th:text="${weatherSecondDay}"></span></div>
+                    <div><span><strong>Day 3:</strong></span> </span><span th:text="${weatherThirdDay}"></span></div>
+                    <div><span><strong>Day 4:</strong></span> </span><span th:text="${weatherFourthDay}"></span></div>
+                    <div><span><strong>Day 5:</strong></span> </span><span th:text="${weatherFifthDay}"></span></div>
+                    <div><span><strong>Day 6:</strong></span> </span><span th:text="${weatherSixthDay}"></span></div>
+                    <div><span><strong>Day 7:</strong></span> </span><span th:text="${weatherSeventhDay}"></span></div>
                     </p>
                     <p>
                         <span class="w3-tag w3-small w3-theme-d5">Weather</span>

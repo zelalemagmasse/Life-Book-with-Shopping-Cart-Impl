@@ -5,6 +5,7 @@ import com.lifebook.Model.*;
 import com.lifebook.Repositories.*;
 import com.lifebook.Service.CloudinaryConfig;
 import com.lifebook.Service.EmailService;
+import com.lifebook.Service.NewsService;
 import com.lifebook.Service.UserService;
 import com.nulabinc.zxcvbn.Strength;
 import com.nulabinc.zxcvbn.Zxcvbn;
@@ -27,15 +28,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 public class HomeController {
     @Autowired
     AppRoleRepository roles;
 
+    @Autowired
+    NewsService newsService;
 
     @Autowired
     UserService userService;
@@ -55,11 +56,14 @@ public class HomeController {
     @Autowired
     EmailService emailService;
 
+    @Autowired
+    InterestRepository interests;
 
 
 
     @RequestMapping("/")
-    public String homePage() {
+    public String homePage(Model model) {
+        model.addAttribute("articles", newsService.articlesByCategory("Technology"));
         return "index";
     }
 
@@ -71,6 +75,7 @@ public class HomeController {
     @GetMapping("/register")
     public String registration(Model model){
         model.addAttribute("user", new AppUser());
+        model.addAttribute("interests", interests.findAll());
         return "registration";
     }
 
@@ -162,6 +167,16 @@ public class HomeController {
        adminLogin.getRoles().add(admin);
        users.save(adminLogin);
 
+       Interest interest;
+      ArrayList<String> interestList = new ArrayList<>(Arrays
+              .asList("business", "entertainment", "general", "health", "science",
+                      "sports", "technology"));
+
+      for (String s: interestList) {
+          interest = new Interest();
+          interest.setName(s);
+          interests.save(interest);
+      }
 
 
 

@@ -35,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/register", "/error").permitAll()
                 .antMatchers("/confirm").permitAll()
                 .antMatchers("/css/**", "/js/**","/img/**").permitAll()
-                .antMatchers("/").hasAuthority("SUSPENDED")
+//                .antMatchers("/").hasAuthority("SUSPENDED")
                 .antMatchers("/users/**").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers("/h2/**", "/admin/**").hasAnyAuthority("USER", "ADMIN")
 

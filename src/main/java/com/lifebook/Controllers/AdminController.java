@@ -2,6 +2,7 @@ package com.lifebook.Controllers;
 
 import com.lifebook.Model.AppUser;
 import com.lifebook.Repositories.AppUserRepository;
+import com.lifebook.Service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,9 +15,12 @@ public class AdminController {
     @Autowired
     AppUserRepository users;
 
-    @RequestMapping("/")
-    public String homePageAdmin() {
+    @Autowired
+	NewsService newsService;
 
+    @RequestMapping("/")
+    public String homePageAdmin(Model model) {
+		model.addAttribute("articles", newsService.defaultArticles());
         return "index";
     }
 
