@@ -6,6 +6,7 @@ import com.lifebook.Model.UserPost;
 import com.lifebook.Repositories.*;
 import com.lifebook.Service.CloudinaryConfig;
 import com.lifebook.Service.FollowingService;
+import com.lifebook.Service.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -43,6 +45,9 @@ public class UserController {
 
     @Autowired
     CloudinaryConfig cloudc;
+
+    @Autowired
+    WeatherService weatherService;
 
     @RequestMapping("/")
     public String homePageLoggedIn(Authentication authentication, Model model) {
@@ -101,11 +106,29 @@ public class UserController {
     @RequestMapping("/profile")
     public String userProfile(Model model, Authentication authentication) {
         AppUser user = users.findByUsername(authentication.getName());
+
         model.addAttribute("currentuser", user);
         UserPost post = new UserPost();
         model.addAttribute("post",post);
+
+        model.addAttribute("weatherToday",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(0).getDay().getCondition().getText()) ;
+
         model.addAttribute("posts", posts.findAllByOrderByIdDesc());
         return "profile";
+    }
+
+    @RequestMapping("/following")
+    public String displayFolloing(Model model, Authentication authentication) {
+        AppUser sessionUser =users.findByUsername(authentication.getName());
+        model.addAttribute("currentuser", sessionUser);
+        Set<AppUser> following = sessionUser.getFollowing();
+        Set<UserPost> posts = new HashSet<>();
+        for (AppUser u: following) {
+            posts.addAll(u.getPosts());
+        }
+      //  posts.remove(sessionUser.getPosts());
+        model.addAttribute("posts", posts);
+        return "following";
     }
 
     @RequestMapping("/follow/{id}")
@@ -113,9 +136,12 @@ public class UserController {
 
         AppUser detail = users.findById(id).get();
         AppUser sessionUser = users.findByUsername(auth.getName());
-        detail.setMyFriend(true);
+        if(sessionUser.getFollowing().contains(detail)){
+            detail.setMyFriend(true);
+        }
+
         sessionUser.getFollowing().add(detail);
-        sessionUser.setNoOfFriend(sessionUser.getNoOfFriend()+ 1);
+        sessionUser.setNoOfFriend(sessionUser.getFollowing().size());
         users.save(sessionUser);
         return "redirect:/users/profile";
     }
@@ -126,16 +152,28 @@ public class UserController {
         AppUser sessionUser = users.findByUsername(auth.getName());
         detail.setMyFriend(false);
         sessionUser.getFollowing().remove(detail);
-        sessionUser.setNoOfFriend(sessionUser.getNoOfFriend()- 1);
+        sessionUser.setNoOfFriend(sessionUser.getFollowing().size());
         users.save(sessionUser);
         return "redirect:/users/profile";
     }
 
 
-    @RequestMapping("/following")
-    public String followingUsers() {
-        return "following";
+    @RequestMapping("/delete/{id}")
+    public String deleteMessage (@PathVariable("id") long id, Authentication auth) {
+
+        UserPost inappropriate=posts.findById(id).get();
+        posts.delete(inappropriate);
+
+
+        return "redirect:/users/profile";
     }
+
+
+
+//    @RequestMapping("/following")
+//    public String followingUsers() {
+//        return "following";
+//    }
 
     @RequestMapping("/weather")
     public String weather() {

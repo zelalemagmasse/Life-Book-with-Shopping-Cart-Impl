@@ -33,7 +33,7 @@ public class SSUDS implements UserDetailsService {
         AppUser theUser = userRepository.findByUsername(s);
         if (theUser == null)
             throw new UsernameNotFoundException("Unable to find that user");
-        return new org.springframework.security.core.userdetails.User(theUser.getUsername(), theUser.getPassword(), !theUser.getSuspended(), true, true, true, getAuthorities(theUser));
+        return new org.springframework.security.core.userdetails.User(theUser.getUsername(), theUser.getPassword(), !theUser.getSuspended(), true, true, theUser.getEnabled(), getAuthorities(theUser));
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(AppUser user) {

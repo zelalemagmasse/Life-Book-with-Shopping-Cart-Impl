@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="www.thymeleaf.org">
 <head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous" />
     <title>Login</title>
     <th:block th:replace="base :: headstuff"></th:block>
 </head>
@@ -41,9 +45,16 @@
     </div>
 
     <!-- Middle Column -->
+
     <div class="w3-col m7">
 
         <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+
+            <div th:if="${goConfirm}" class="alert alert-danger"
+                 role="alert" th:text=${goConfirm}></div>
+            <div th:if="${confirmationMessage}" class="alert alert-success"
+                 role="alert" th:text=${confirmationMessage}></div>
+
             <h1 class="w3-center">Login</h1><br>
             <hr class="w3-clear">
             <div class="w3-row-padding" style="margin:0 -16px">

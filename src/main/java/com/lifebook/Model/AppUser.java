@@ -13,6 +13,9 @@ public class AppUser {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
 
+    @Column(name = "enabled")
+    private boolean enabled;
+
     @Column(name = "password", nullable = false)
     @NotEmpty(message = "Please provide a password")
     private String password;
@@ -20,6 +23,19 @@ public class AppUser {
     private String profilePic;
 
     private String fullName;
+
+    public String getConfirmationToken() {
+        return confirmationToken;
+    }
+
+    public void setConfirmationToken(String confirmationToken) {
+        this.confirmationToken = confirmationToken;
+    }
+
+    @Column(name = "confirmation_token")
+    private String confirmationToken;
+
+
 
 
     private boolean myFriend=false;
@@ -46,6 +62,10 @@ public class AppUser {
         return suspended;
     }
 
+    private String zipCode;
+
+
+
     @OneToMany(mappedBy = "creator")
     private Set<UserPost> posts;
 
@@ -62,6 +82,26 @@ public class AppUser {
     private String email;
 
     private boolean suspended;
+
+
+
+
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
     public String getProfilePic() {
         return profilePic;
@@ -122,6 +162,7 @@ public class AppUser {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<AppRole> roles;
+
 
 
     @ManyToMany

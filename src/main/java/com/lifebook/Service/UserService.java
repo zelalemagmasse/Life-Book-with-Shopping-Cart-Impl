@@ -31,4 +31,12 @@ public class UserService {
         user.getRoles().add(roles.findByRole("USER"));
         users.save(user);
     }
+
+    public AppUser findByEmail(String email) {
+        return users.findByEmail(email);
+    }
+
+    public AppUser findByConfirmationToken(String confirmationToken) {
+        return users.findByConfirmationToken(confirmationToken);
+    }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="www.thymeleaf.org">
+<html lang="en" xmlns:th="www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <title>Profile</title>
     <th:block th:replace="base :: headstuff"></th:block>
@@ -57,7 +57,7 @@
                     <hr>
                     <p th:inline="text"><i class="fa fa-user fa-fw w3-margin-right w3-text-theme"></i> [[${currentuser.fullName}]]</p>
                     <p th:inline="text"><i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i> [[${currentuser.email}]]</p>
-                    <p th:inline="text"><i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i> FOLLOWING [[${currentuser.noOfFriend}]]</p>
+                    <p th:inline="text"><i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i> Following:  <a th:href="@{/users/following}">[[${currentuser.noOfFriend}]]</a></p>
 
                 </div>
             </div>
@@ -68,7 +68,10 @@
                 <div class="w3-container">
                     <p>Interests</p>
                     <p>
-                        <span class="w3-tag w3-small w3-theme-d5">News</span>
+                        <span class="w3-tag w3-small w3-theme-d5" th:text="${weatherToday}"></span>
+                    </p>
+                    <p>
+                        <span class="w3-tag w3-small w3-theme-d5">Weather</span>
                     </p>
                 </div>
             </div>
@@ -115,9 +118,13 @@
                         <!--<img src="/w3images/nature.jpg" style="width:100%" alt="Nature" class="w3-margin-bottom">-->
                     </div>
                 </div>
-                <div th:switch="${aPost.creator.isMyFriend()}">
+                <div th:switch="${currentuser.getFollowing().contains(aPost.creator)}">
                 <span th:case="false"><a th:href="@{/users/follow/{id}(id=${aPost.creator.id})}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i>  FOLLOW</button></a></span>
                 <span th:case="true"><a th:href="@{/users/unfollow/{id}(id=${aPost.creator.id})}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i>  UNFOLLOW</button></a></span>
+                </div>
+                <div sec:authorize="hasAuthority('ADMIN')">
+                    <span><a th:href="@{/users/delete/{id}(id=${aPost.id})}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i>  Delete Message</button></a></span>
+
                 </div>
                 </div>
 
