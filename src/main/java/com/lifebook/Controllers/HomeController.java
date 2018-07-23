@@ -159,15 +159,7 @@ public class HomeController {
        user.setRole("USER");
        roles.save(user);
 
-       AppUser adminLogin = new AppUser();
-       adminLogin.setUsername("admin");
-       adminLogin.setPassword("adminp");
-       adminLogin.setEnabled(true);
-       adminLogin.setEmail("zelalem.agmasse@gmail.com");
-       adminLogin.getRoles().add(admin);
-       users.save(adminLogin);
-
-       Interest interest;
+      Interest interest;
       ArrayList<String> interestList = new ArrayList<>(Arrays
               .asList("business", "entertainment", "general", "health", "science",
                       "sports", "technology"));
@@ -177,6 +169,55 @@ public class HomeController {
           interest.setName(s);
           interests.save(interest);
       }
+
+       AppUser adminLogin = new AppUser();
+       adminLogin.setUsername("admin");
+       adminLogin.setPassword("adminp");
+       adminLogin.setEnabled(true);
+       adminLogin.setEmail("zelalem.agmasse@gmail.com");
+       adminLogin.getRoles().add(admin);
+       users.save(adminLogin);
+
+      adminLogin = new AppUser();
+      adminLogin.setUsername("admintwo");
+      adminLogin.setPassword("adminpassword");
+      adminLogin.setEnabled(true);
+      adminLogin.setEmail("email@gmail.com");
+      adminLogin.getRoles().add(admin);
+      users.save(adminLogin);
+
+      AppUser userone = new AppUser();
+      userone.setUsername("userone");
+      userone.setPassword("passwordone");
+      userone.setEnabled(true);
+      userone.setEmail("email@emailone.com");
+      userone.getRoles().add(user);
+      for (Interest i: interests.findAll()){
+          userone.getInterests().add(i);
+      }
+      users.save(userone);
+
+      AppUser usertwo = new AppUser();
+      usertwo.setUsername("usertwo");
+      usertwo.setPassword("passwordtwo");
+      usertwo.setEnabled(true);
+      usertwo.setEmail("email@emailtwo.com");
+      usertwo.getRoles().add(user);
+      for (Interest i: interests.findAll()){
+          usertwo.getInterests().add(i);
+      }
+      users.save(usertwo);
+
+      AppUser userthree = new AppUser();
+      userthree.setUsername("userthree");
+      userthree.setPassword("passwordthree");
+      userthree.setEnabled(true);
+      userthree.setEmail("email@emailthree.com");
+      userthree.getRoles().add(user);
+      for (Interest i: interests.findAll()){
+          userthree.getInterests().add(i);
+      }
+      users.save(userthree);
 
 
 
