@@ -1,9 +1,12 @@
 package com.lifebook.Controllers;
 
 import com.lifebook.Model.AppUser;
+import com.lifebook.Model.UserPost;
 import com.lifebook.Repositories.AppUserRepository;
+import com.lifebook.Repositories.UserPostRepository;
 import com.lifebook.Service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +21,9 @@ public class AdminController {
     @Autowired
 	NewsService newsService;
 
+    @Autowired
+    UserPostRepository posts;
+
     @RequestMapping("/")
     public String homePageAdmin(Model model) {
 		model.addAttribute("articles", newsService.defaultArticles());
@@ -25,10 +31,20 @@ public class AdminController {
     }
 
 	@RequestMapping("/allmessages")
-	public String messages() {
-
-		return "messages";
+	public String messages(Model model) {
+        model.addAttribute("posts", posts.findAllByOrderByIdDesc());
+		return "results";
 	}
+
+    @RequestMapping("/delete/{id}")
+    public String deleteMessage (@PathVariable("id") long id, Authentication auth) {
+
+        UserPost inappropriate=posts.findById(id).get();
+        posts.delete(inappropriate);
+
+
+        return "redirect:/allmessages";
+    }
 
 	@RequestMapping("/allusers")
 	public String users() {

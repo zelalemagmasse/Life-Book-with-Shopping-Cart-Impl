@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="www.thymeleaf.org">
+<html lang="en" xmlns:th="www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
   <title>Profile</title>
   <th:block th:replace="base :: headstuff"></th:block>
@@ -76,8 +76,11 @@
         <!--<button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-thumbs-up"></i>  Like</button>-->
         <a th:href="@{/users/follow/{id}(id=${aPost.creator.id})}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i>  FOLLOW</button></a>
         <a th:href="@{/users/unfollow/{id}(id=${aPost.creator.id})}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i>  UNFOLLOW</button></a>
-      </div>
 
+      <div sec:authorize="hasAuthority('ADMIN')">
+        <span><a th:href="@{/admin/delete/{id}(id=${aPost.id})}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i> Delete Message</button></a></span>
+      </div>
+    </div>
 
 
       <!-- End Middle Column -->

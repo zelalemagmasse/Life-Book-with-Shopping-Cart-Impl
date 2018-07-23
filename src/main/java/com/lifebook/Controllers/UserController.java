@@ -186,17 +186,6 @@ public class UserController {
     }
 
 
-    @RequestMapping("/delete/{id}")
-    public String deleteMessage (@PathVariable("id") long id, Authentication auth) {
-
-        UserPost inappropriate=posts.findById(id).get();
-        posts.delete(inappropriate);
-
-
-        return "redirect:/users/profile";
-    }
-
-
 
 //    @RequestMapping("/following")
 //    public String followingUsers() {
