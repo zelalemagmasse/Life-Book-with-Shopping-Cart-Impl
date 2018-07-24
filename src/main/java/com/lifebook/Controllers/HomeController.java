@@ -131,7 +131,7 @@ public class HomeController {
             model.addAttribute("nonexistingemail",
                     "There is no account with that email: " + email);
         } else {
-            String appUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getLocalPort();
+            String appUrl = request.getScheme() + "://" + request.getServerName();
             try {
                 emailService.sendEmailMessage(user.getEmail(), "Registration Confirmation",
                         "To confirm your e-mail address, please click the link below:\n"
