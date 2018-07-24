@@ -104,7 +104,7 @@ public class HomeController {
         try {
             emailService.sendEmailMessage(user.getEmail(), "Registration Confirmation",
                     "To confirm your e-mail address, please click the link below:\n"
-                            + appUrl + "/confirm?token=" + user.getConfirmationToken());
+                          + appUrl + "/confirm?token=" + user.getConfirmationToken());
         } catch (MessagingException e) {
             model.addAttribute("errorMessage",
                     "Failed to send confirmation email.");

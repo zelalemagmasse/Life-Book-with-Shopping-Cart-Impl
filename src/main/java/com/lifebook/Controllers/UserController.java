@@ -152,7 +152,6 @@ public class UserController {
     public String showResults(HttpServletRequest request, Model model, Authentication authentication) {
         model.addAttribute("posts", posts.findAllByContentContainingIgnoreCase(request.getParameter("query")));
         model.addAttribute("currentuser", users.findByUsername(authentication.getName()));
-
         return "results";
     }
 }
