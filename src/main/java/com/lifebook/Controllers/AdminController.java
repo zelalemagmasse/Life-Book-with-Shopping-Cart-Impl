@@ -31,8 +31,12 @@ public class AdminController {
     }
 
 	@RequestMapping("/allmessages")
-	public String messages(Model model) {
+	public String messages(Model model, Authentication authentication) {
         model.addAttribute("posts", posts.findAllByOrderByIdDesc());
+
+		AppUser user = users.findByUsername(authentication.getName());
+
+		model.addAttribute("currentuser", user);
 		return "results";
 	}
 
@@ -43,7 +47,7 @@ public class AdminController {
         posts.delete(inappropriate);
 
 
-        return "redirect:/allmessages";
+        return "redirect:/admin/allmessages";
     }
 
 	@RequestMapping("/allusers")

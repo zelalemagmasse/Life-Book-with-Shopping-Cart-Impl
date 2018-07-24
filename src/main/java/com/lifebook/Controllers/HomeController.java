@@ -89,20 +89,22 @@ public class HomeController {
         if (result.hasErrors()) {
             return "registration";
         } else {
-            if (file.isEmpty()) {
-                user.setProfilePic("/img/user.png");
-                userService.saveUser(user);
-                return "redirect:/login";
-            }
-            else {
-                try {
-                    Map uploadResult = cloudc.upload(file.getBytes(), ObjectUtils.asMap("resourcetype", "auto"));
-                    String uploadedName = (String) uploadResult.get("public_id");
 
-                    String transformedImage = cloudc.createUrl(uploadedName);
+
+                try {
+                    if (file.isEmpty()) {
+                        user.setProfilePic("/img/user.png");
+                    }
+                    else {
+                        Map uploadResult = cloudc.upload(file.getBytes(), ObjectUtils.asMap("resourcetype", "auto"));
+                        String uploadedName = (String) uploadResult.get("public_id");
+
+                        String transformedImage = cloudc.createUrl(uploadedName);
+                        user.setProfilePic(transformedImage);
+                    }
                     user.setEnabled(false);
                     user.setConfirmationToken(UUID.randomUUID().toString());
-                    user.setProfilePic(transformedImage);
+
                     userService.saveUser(user);
                     String appUrl = request.getScheme() + "://" + request.getServerName()+":"+request.getLocalPort();
                     senndEmail(user.getEmail(),"Registration Confirmation", "To confirm your e-mail address, please click the link below:\n"
@@ -115,7 +117,7 @@ public class HomeController {
                     return "redirect:/login";
                 }
             }
-        }
+
         model.addAttribute("goConfirm","a verification email has been sent via the email you entered , please open your emial and confirm before login");
         return "login";
     }

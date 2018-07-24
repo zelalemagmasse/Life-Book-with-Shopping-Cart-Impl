@@ -74,9 +74,12 @@
           </div>
         </div>
         <!--<button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-thumbs-up"></i>  Like</button>-->
-        <a th:href="@{/users/follow/{id}(id=${aPost.creator.id})}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i>  FOLLOW</button></a>
-        <a th:href="@{/users/unfollow/{id}(id=${aPost.creator.id})}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i>  UNFOLLOW</button></a>
-
+        <div sec:authorize="hasAuthority('USER')">
+          <div th:switch="${currentuser.getFollowing().contains(aPost.creator)}">
+            <span th:case="false"><a th:href="@{/users/follow/{id}(id=${aPost.creator.id})}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i>  FOLLOW</button></a></span>
+            <span th:case="true"><a th:href="@{/users/unfollow/{id}(id=${aPost.creator.id})}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i>  UNFOLLOW</button></a></span>
+          </div>
+        </div>
       <div sec:authorize="hasAuthority('ADMIN')">
         <span><a th:href="@{/admin/delete/{id}(id=${aPost.id})}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i> Delete Message</button></a></span>
       </div>

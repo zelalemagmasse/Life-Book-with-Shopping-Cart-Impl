@@ -203,8 +203,11 @@ public class UserController {
     }
 
     @RequestMapping("/findpost")
-    public String showResults(HttpServletRequest request, Model model) {
+    public String showResults(HttpServletRequest request, Model model, Authentication authentication) {
         model.addAttribute("posts", posts.findAllByContentContainingIgnoreCase(request.getParameter("query")));
+        AppUser user = users.findByUsername(authentication.getName());
+
+        model.addAttribute("currentuser", user);
         return "results";
     }
 }
