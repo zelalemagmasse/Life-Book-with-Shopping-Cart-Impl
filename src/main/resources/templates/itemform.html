@@ -28,8 +28,8 @@
                 </div>
             </div>
 
-        <br>
-        <!-- Interests -->
+            <br>
+            <!-- Interests -->
             <div class="w3-col m11">
                 <h4 class="w3-center">Headline News</h4>
                 <div class="w3-container w3-card w3-white w3-round w3-margin"th:each="article:${articles}"><br>
@@ -50,9 +50,9 @@
                 </div>
                 <!-- End Middle Column -->
             </div>
-        <br>
+            <br>
 
-        <!-- Interests -->
+            <!-- Interests -->
             <!-- End Left Column -->
         </div>
 
@@ -64,58 +64,43 @@
                     <div class="w3-card w3-round w3-white">
                         <div class="w3-container w3-padding">
                             <h6 class="w3-opacity"></h6>
-                            <form th:action="@{/users/newmessage}" th:object =${post}
-                                  method="post" enctype="multipart/form-data">
-                                <label>Subject:</label>
-                                <input type="text" class="w3-input w3-border w3-padding" th:field="*{subject}"><br/>
-                                <label>Post</label>
-                                <textarea class="w3-input w3-border w3-padding" th:field = "*{content}"></textarea><br/>
+                            <form th:action="@{/users/saveitem}" th:object="${anItem}" method="post" enctype="multipart/form-data">
+                                <input type="hidden" th:field="*{id}">
+                                <div class="form-group col-md-6">
+                                    <label for="nameOfItem" th:text="'Name Of Item'"></label>
+                                    <input type="text" class="form-control" th:field="*{nameOfItem}">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="description" th:text="'Descripiton'"></label>
+                                    <input type="text" class="form-control" th:field="*{description}">
+                                </div>
+                                <div>
                                 <label>Picture</label>
                                 <input type="file" name ="file" class="w3-input w3-border w3-padding"><br/>
-                                <fieldset>
-                                    <legend>Filter:</legend>
-                                    <select class="form-control" th:field = "*{filter}">
-                                        <option value="">Normal</option>
-                                        <option value="w3-opacity">Opaque</option>
-                                        <option value="w3-grayscale-max">Grayscale</option>
-                                        <option value="w3-sepia">Sepia</option>
-                                    </select>
-                                </fieldset>
-                                <br/>
-                                <button type="submit" class="w3-button w3-theme"><i class="fa fa-pencil"></i>  Post</button>
+                                </div>
+                                    <div class="form-group col-md-6">
+                                    <label for="tags" th:text="'Tags'"></label>
+                                    <input type="text" class="form-control" th:field="*{tags}">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="price" th:text="'Price'"></label>
+                                    <input type="text" class="form-control" th:field="*{price}">
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Submit</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="w3-container w3-card w3-white w3-round w3-margin" th:each = "aPost : ${posts}"><br>
-                <img th:src="${aPost.creator.profilePic}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
-                <div class="w3-right w3-opacity" th:text="${aPost.dateOfPost}"></div>
-                <h4 th:text = "${aPost.creator.firstName} + ' ' + ${aPost.creator.lastName}"></h4><br>
-                <h4 th:text = "${aPost.subject}"></h4><br>
-                <hr class="w3-clear">
-                <p th:text="${aPost.content}"></p>
-                <div class="w3-row-padding" style="margin:0 -16px">
-                    <div class="w3-half" th:if="${aPost.imageUrl} != null">
-                        <img th:src="${aPost.imageUrl}" style="width:100%" alt="Post Image" th:class="|w3-margin-bottom ${aPost.filter}|">
-                    </div>
-                </div>
-                <div th:if="${currentuser.username} != ${aPost.creator.username}">
-                    <div th:switch="${currentuser.getFollowing().contains(aPost.creator)}">
-                        <span th:case="false"><a th:href="@{/users/follow/{id}(id=${aPost.creator.id})}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i>  FOLLOW</button></a></span>
-                        <span th:case="true"><a th:href="@{/users/unfollow/{id}(id=${aPost.creator.id})}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i>  UNFOLLOW</button></a></span>
-                    </div>
-                </div>
-                <div sec:authorize="hasAuthority('ADMIN')">
-                    <span><a th:href="@{/users/delete/{id}(id=${aPost.id})}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i>  Delete Message</button></a></span>
-                </div>
 
-            </div>
-            <!-- End Middle Column -->
-        </div>
+
+
+                <!-- End Middle Column -->
+
             <!-- Right Column -->
-
+        </div>
         <div class="w3-col m3">
             <div class="w3-card w3-round w3-white">
                 <div class="w3-container">

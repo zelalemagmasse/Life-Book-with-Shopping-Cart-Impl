@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.lifebook.Model.Weather;
+import com.lifebook.Model.Weather.Weather;
 
 @Component
 public class WeatherService {

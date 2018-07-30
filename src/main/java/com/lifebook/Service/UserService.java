@@ -1,14 +1,10 @@
 package com.lifebook.Service;
 
-import com.lifebook.Model.AppRole;
 import com.lifebook.Model.AppUser;
 import com.lifebook.Repositories.AppRoleRepository;
 import com.lifebook.Repositories.AppUserRepository;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 
 @Service
 public class UserService {

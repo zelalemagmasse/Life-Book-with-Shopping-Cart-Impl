@@ -1,4 +1,4 @@
-package com.lifebook.Model;
+package com.lifebook.Model.News;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

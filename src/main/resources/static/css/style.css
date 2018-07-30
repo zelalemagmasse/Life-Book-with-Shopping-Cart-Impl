@@ -14,3 +14,27 @@ html,body,h1,h2,h3,h4,h5 {
     width: 50%;
     float: left;
 }
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 15px;
+    text-align: left;
+}
+table#t01 {
+    width: 100%;
+    background-color: #f1f1c1;
+}
+
+.stylewidth{
+    width: 100%;
+}
+.backgroundcolor{
+    background-color: #f1f1c1;
+}
+table.menu {
+    width: auto;
+    float: left;
+}

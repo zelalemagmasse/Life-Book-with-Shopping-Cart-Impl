@@ -1,6 +1,7 @@
-package com.lifebook.Model;
+package com.lifebook.Model.News;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.lifebook.Model.News.Article;
 
 import java.util.ArrayList;
 import java.util.List;

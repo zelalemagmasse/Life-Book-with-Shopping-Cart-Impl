@@ -1,9 +1,9 @@
 package com.lifebook.Service;
 
 import com.lifebook.Model.AppUser;
-import com.lifebook.Model.Article;
-import com.lifebook.Model.Articles;
-import com.lifebook.Model.Interest;
+import com.lifebook.Model.News.Article;
+import com.lifebook.Model.News.Articles;
+import com.lifebook.Model.News.Interest;
 import com.lifebook.Repositories.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

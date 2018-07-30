@@ -2,6 +2,9 @@ package com.lifebook.Controllers;
 
 import com.cloudinary.utils.ObjectUtils;
 import com.lifebook.Model.*;
+import com.lifebook.Model.News.Interest;
+import com.lifebook.Model.AppRole;
+import com.lifebook.Model.Shopping.Cart;
 import com.lifebook.Repositories.*;
 import com.lifebook.Service.CloudinaryConfig;
 import com.lifebook.Service.EmailService;
@@ -222,7 +225,10 @@ public class HomeController {
 
   @PostConstruct
     public void loadData() {
-       AppRole admin = new AppRole();
+
+
+
+        AppRole admin = new AppRole();
        admin.setRole("ADMIN");
        roles.save(admin);
 

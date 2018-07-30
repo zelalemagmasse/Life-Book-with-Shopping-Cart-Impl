@@ -1,6 +1,7 @@
-package com.lifebook.Model;
+package com.lifebook.Model.Weather;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Day {
 

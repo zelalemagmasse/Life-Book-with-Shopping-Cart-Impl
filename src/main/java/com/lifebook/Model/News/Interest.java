@@ -1,5 +1,7 @@
-package com.lifebook.Model;
+package com.lifebook.Model.News;
 
+
+import com.lifebook.Model.AppUser;
 
 import javax.persistence.*;
 import java.util.ArrayList;

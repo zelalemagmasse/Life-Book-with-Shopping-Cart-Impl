@@ -2,10 +2,13 @@ package com.lifebook.Controllers;
 
 import com.cloudinary.utils.ObjectUtils;
 import com.lifebook.Model.AppUser;
+import com.lifebook.Model.Shopping.Cart;
+import com.lifebook.Model.Shopping.Item;
 import com.lifebook.Model.UserPost;
 import com.lifebook.Repositories.*;
 import com.lifebook.Service.CloudinaryConfig;
 import com.lifebook.Service.NewsService;
+import com.lifebook.Service.ShoppingService;
 import com.lifebook.Service.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -41,6 +44,15 @@ public class UserController {
 
     @Autowired
     NewsService newsService;
+    @Autowired
+    ItemRepository itemRepository;
+
+    @Autowired
+    ShoppingService shoppingService;
+
+    @Autowired
+    CartRepository cartRepository;
+
 
     @RequestMapping("/")
     public String homePageLoggedIn(Authentication authentication, Model model) {
@@ -88,21 +100,15 @@ public class UserController {
         model.addAttribute("currentuser", user);
         UserPost post = new UserPost();
         model.addAttribute("post",post);
-
-        model.addAttribute("weatherFirstDay",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(0).getDay().getCondition().getText()) ;
-        model.addAttribute("weatherSecondDay",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(1).getDay().getCondition().getText()) ;
-        model.addAttribute("weatherThirdDay",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(2).getDay().getCondition().getText()) ;
-        model.addAttribute("weatherFourthDay",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(3).getDay().getCondition().getText()) ;
-        model.addAttribute("weatherFifthDay",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(4).getDay().getCondition().getText()) ;
-        model.addAttribute("weatherSixthDay",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(5).getDay().getCondition().getText()) ;
-        model.addAttribute("weatherSeventhDay",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(6).getDay().getCondition().getText()) ;
-
+        model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
+        System.out.println(weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(1).getDate());
         Set<AppUser> following = user.getFollowing();
         List<UserPost> posts = new ArrayList<>(user.getPosts());
         for (AppUser u: following) {
             posts.addAll(u.getPosts());
         }
         Collections.reverse(posts);
+        model.addAttribute("articles", newsService.personalized(authentication));
 
         model.addAttribute("posts", posts.toArray());
         return "profile";
@@ -153,5 +159,87 @@ public class UserController {
         model.addAttribute("posts", posts.findAllByContentContainingIgnoreCase(request.getParameter("query")));
         model.addAttribute("currentuser", users.findByUsername(authentication.getName()));
         return "results";
+    }
+    @RequestMapping("/additem")
+    public String addRoom(Model model,Authentication authentication) {
+        model.addAttribute("anItem", new Item());
+        AppUser user = users.findByUsername(authentication.getName());
+        model.addAttribute("currentuser", user);
+        model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
+        System.out.println(weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(1).getDate());
+        model.addAttribute("articles", newsService.personalized(authentication));
+        return "itemform";
+    }
+    @RequestMapping("/saveitem")
+    public String saveItem(@ModelAttribute("anItem") Item item,@RequestParam("file") MultipartFile file, Model model,Authentication authentication) {
+        itemRepository.save(item);
+
+        AppUser user = users.findByUsername(authentication.getName());
+
+        model.addAttribute("currentuser", user);
+
+        model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
+        System.out.println(weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(1).getDate());
+        model.addAttribute("articles", newsService.personalized(authentication));
+        if (!file.isEmpty()) {
+            try {
+                Map uploadResult = cloudc.upload(file.getBytes(), ObjectUtils.asMap("resourcetype", "auto"));
+                String uploadedName = (String) uploadResult.get("public_id");
+
+                String transformedImage = cloudc.createUrl(uploadedName);
+                item.setProductImage(transformedImage);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "redirect:/users/profile";
+            }
+        }
+        itemRepository.save(item);
+        //model.addAttribute("items", itemRepository.findByOwner(user));
+        return "displayitem";
+    }
+
+    @RequestMapping("/buyitem")
+    public String buyItem( Model model,Authentication authentication) {
+
+
+        AppUser user = users.findByUsername(authentication.getName());
+
+        model.addAttribute("currentuser", user);
+
+        model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
+        model.addAttribute("articles", newsService.personalized(authentication));
+
+        Cart myCart=new Cart();
+        user.setUserCart(myCart);
+       // model.addAttribute("myCart",new Cart());
+        users.save(user);
+        model.addAttribute("items", itemRepository.findAll());
+        return "displayitem";
+    }
+    @RequestMapping("/addtocart/{id}")
+    public String addToCart(@PathVariable("id") long id,  Model model, Authentication authentication){
+       AppUser user= users.findByUsername(authentication.getName());
+        //System.out.println(user.getUsername());
+        model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
+        model.addAttribute("articles", newsService.personalized(authentication));
+        Item item=itemRepository.findById(id).get();
+        //System.out.println(item.getPrice());
+
+
+        user.getUserCart().getItemPurchased().add(item);
+       // myCart=user.getUserCart().getItemPurchased().add(item);
+
+      ;
+        users.save(user);
+       // cartRepository.save(myCart);
+
+        model.addAttribute("currentuser",user);
+       itemRepository.save(item);
+        model.addAttribute("items", itemRepository.findAll());
+        model.addAttribute("cart", shoppingService.priceCalculator(user.getUserCart()));
+
+        return "displayitem";
+
     }
 }

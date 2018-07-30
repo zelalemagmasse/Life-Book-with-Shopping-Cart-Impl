@@ -1,4 +1,4 @@
-package com.lifebook.Model;
+package com.lifebook.Model.Weather;
 
 
 

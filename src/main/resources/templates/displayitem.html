@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org.thymeleaf-extras-springsecurity4">
+<head>
+    <title>Profile</title>
+    <th:block th:replace="base :: headstuff"></th:block>
+</head>
+<body class="w3-theme-l5">
+
+<!-- Navbar -->
+<nav th:replace="base :: navbar"></nav>
+
+<!-- Page Container -->
+<div class="w3-container w3-content" style="max-width:1600px;margin-top:80px">
+    <!-- The Grid -->
+    <div class="w3-row">
+        <!-- Left Column -->
+        <div class="w3-col m2">
+            <!-- Profile -->
+            <div class="w3-card w3-round w3-white">
+                <div class="w3-container">
+                    <h4 class="w3-center">My Profile</h4>
+                    <p class="w3-center"><img th:src="${currentuser.profilePic}" class="w3-circle" style="height:106px;width:106px" alt="Avatar"></p>
+                    <hr>
+                    <p th:inline="text"><i class="fa fa-user fa-fw w3-margin-right w3-text-theme"></i> [[${currentuser.firstName}]] [[${currentuser.lastName}]]</p>
+                    <p th:inline="text"><i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i> [[${currentuser.email}]]</p>
+                    <p th:inline="text"><i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i> Following:  <a th:href="@{/users/following}">[[${currentuser.noOfFriends}]]</a></p>
+
+                </div>
+            </div>
+
+            <br>
+            <!-- Interests -->
+            <div class="w3-col m11">
+                <h4 class="w3-center">Headline News</h4>
+                <div class="w3-container w3-card w3-white w3-round w3-margin"th:each="article:${articles}"><br>
+                    <span class="w3-right w3-opacity" th:text="${article.publishedAt}"></span>
+                    <h4 th:text="${article.title}"></h4><br/>
+                    <hr class="w3-clear">
+                    <span th:text="${article.description}"></span>
+                    <div><img class="w3-border w3-image" th:src="${article.image}"></div>
+                    <a th:href="${article.url}"></a>
+                    <div class="w3-row-padding" style="margin:0 -16px">
+                        <div class="w3-half">
+                            <!--<img src="/w3images/lights.jpg" style="width:100%" alt="Northern Lights" class="w3-margin-bottom">-->
+                        </div>
+                        <div class="w3-half">
+                            <!--<img src="/w3images/nature.jpg" style="width:100%" alt="Nature" class="w3-margin-bottom">-->
+                        </div>
+                    </div>
+                </div>
+                <!-- End Middle Column -->
+            </div>
+            <br>
+
+            <!-- Interests -->
+            <!-- End Left Column -->
+        </div>
+        <!--<tr th:each="itemslist: ${items}">-->
+
+            <!--<td th:text="${itemslist.nameOfItem}"></td>-->
+            <!--<td th:text="${itemslist.description}"></td>-->
+            <!--<td  th:text="${itemslist.tags}"></td>-->
+            <!--<td  th:text="${itemslist.price}"></td>-->
+            <!--<td  th:text="${itemslist.Soldout ? 'SOLD OUT' : 'AVAILABLE'}"></td>-->
+            <!--<td ><a th:href="@{/updateliste/{id}(id=${itemslist.id})}">Buy item</a></td>-->
+        <!--</tr>-->
+
+        <!-- Middle Column -->
+      <h1 align="center">Properties for Sell</h1>
+        <div class="w3-col m7">
+            <div class="w3-row-padding">
+                <div class="w3-col m12">
+                    <div class="w3-card w3-round w3-white">
+                        <div class="w3-container w3-padding">
+                            <div  th:each = "itemslist: ${items}"><br>
+                                <div class="w3-row-padding" style="margin:0 -16px">
+                                    <div class="w3-half" th:if="${itemslist.productImage} != null">
+                                        <img th:src="${itemslist.productImage}" style="width:100%" alt="Post Image" >
+                                    </div>
+                                </div>
+                                <div>
+                                    <ul>
+                                        <li th:text="${itemslist.nameOfItem}"></li>
+                                        <li th:text="${itemslist.description}"></li>
+                                        <li th:text="${itemslist.tags}"></li>
+                                        <li th:text="${itemslist.price}"></li>
+                                    </ul>
+                                </div>
+                                <div >
+                                    <a th:href="@{/users/addtocart/{id}(id=${itemslist.id})}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i>Add to the Cart</button></a>
+                                </div>
+                            </div>
+
+                    </div>
+                </div>
+            </div>
+            </div>
+            <!-- End Middle Column -->
+        </div>
+        <!-- Right Column -->
+        <div class="w3-col m3">
+            <div class="w3-card w3-round w3-white">
+                <div class="w3-container">
+                    <p>Cart:</p>
+                    <table class="menu">
+                        <tr>
+                            <th>Number Of Item Purchased</th>
+                            <th>Total Price</th>
+                        </tr>
+                        <tr th:each="eachCart:${cart}">
+                            <td th:text="${eachCart.numItemPurchased}"></td>
+                            <td th:text="${eachCart.totalPrice}"></td>
+
+                        </tr>
+
+                    </table>
+
+                </div>
+            </div>
+            <!-- End Right Column -->
+        </div>
+
+        <!-- End Grid -->
+    </div>
+
+    <!-- End Page Container -->
+</div>
+<br>img th:src="${currentuser.profilePic}"
+
+<th:block th:replace="base :: jslinks"></th:block>
+</body>
+</html>

@@ -1,5 +1,7 @@
 package com.lifebook.Model;
 
+import com.lifebook.Model.AppUser;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,6 +17,9 @@ public class AppRole {
 
     @ManyToMany(mappedBy = "roles")
     private Set<AppUser> users;
+
+//    @ManyToOne(mappedBy = "owner")
+//    private Set<AppUser> users;
 
     public AppRole() {
         this.users = new HashSet<>();

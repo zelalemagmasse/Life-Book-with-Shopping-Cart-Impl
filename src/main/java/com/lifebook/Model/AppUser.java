@@ -1,4 +1,7 @@
 package com.lifebook.Model;
+import com.lifebook.Model.News.Interest;
+import com.lifebook.Model.Shopping.Cart;
+import com.lifebook.Model.Shopping.Item;
 import com.lifebook.Service.ValidEmail;
 
 import javax.persistence.*;
@@ -12,6 +15,10 @@ public class AppUser {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
+
+//    public AppUser() {
+//
+//    }
 
     @NotNull
     @NotEmpty(message = "Please provide your first name")
@@ -42,10 +49,26 @@ public class AppUser {
     @OneToMany(mappedBy = "settingUser")
     private Set<Setting> settings;
 
+
     @ManyToMany
     private Set<Interest> interests = new HashSet<>();
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private Cart userCart;
+
+    public Cart getUserCart() {
+        return userCart;
+    }
+
+    public void setUserCart(Cart userCart) {
+        this.userCart = userCart;
+    }
+
+    private int numItemPurchased;
+
     private String password;
+
+
 
     private String profilePic;
 
@@ -58,9 +81,17 @@ public class AppUser {
     private boolean myFriend = false;
 
     private int noOfFriends = 0;
+    public int getNumItemPurchased() {
+        return numItemPurchased;
+    }
+
+    public void setNumItemPurchased(int numItemPurchased) {
+        this.numItemPurchased = numItemPurchased;
+    }
 
     public AppUser() {
         this.roles = new HashSet<>();
+       // this.myItems=new HashSet<>();
     }
 
     public long getId() {
@@ -198,4 +229,6 @@ public class AppUser {
     public void setInterests(Set<Interest> interests) {
         this.interests = interests;
     }
+
+
 }

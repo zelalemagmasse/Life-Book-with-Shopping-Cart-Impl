@@ -34,11 +34,22 @@
                 </a>
             </li>
             <li class="nav-item active" sec:authorize="isAuthenticated()">
-                <a class="nav-link" href="/logout">
-                    <i class="fa fa-window-close-o w3-margin-right"></i>Logout
-                </a>
+            <a class="nav-link" href="/logout">
+                <i class="fa fa-window-close-o w3-margin-right"></i>Logout
+            </a>
+            </li>
+            <li class="nav-item active" sec:authorize="isAuthenticated()">
+
+                <div class="w3-dropdown-hover w3-hide-small">
+                    <button  title="Notifications"><i class="fa fa-cart-plus w3-margin-right"></i>Shopping</button>
+                    <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px">
+                        <a href="/users/buyitem" class="w3-bar-item w3-button">Buy</a>
+                        <a href="/users/additem" class="w3-bar-item w3-button">Sell</a>
+                </div>
+                </div>
             </li>
             <li class="nav-item active" sec:authorize="!isAuthenticated()">
+
                 <a class="nav-link" href="/register">
                     <i class="fa fa-pencil-square-o w3-margin-right"></i>Register
                 </a>
