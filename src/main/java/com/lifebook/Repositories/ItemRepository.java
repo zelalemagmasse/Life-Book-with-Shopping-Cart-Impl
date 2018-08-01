@@ -12,6 +12,7 @@ public interface ItemRepository extends CrudRepository<Item,Long> {
     List<Item> findAllByTagsContainingIgnoreCase(String s);
     @Query(value = "select top 10 * from Item", nativeQuery = true)
     Iterable<Item> getTop10();
+    List<Item> findAll();
 
 
 

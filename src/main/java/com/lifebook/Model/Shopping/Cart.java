@@ -3,7 +3,9 @@ package com.lifebook.Model.Shopping;
 import com.lifebook.Model.AppUser;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -11,17 +13,15 @@ public class Cart {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
-    @OneToMany(mappedBy = "cartToPurchase")
-    private Set<Item> itemPurchased;
-    private double totalPrice;
-    private int numItemPurchased;
-    @OneToOne(mappedBy = "userCart")
+
+    @OneToMany(cascade=CascadeType.ALL)
+    private Set<Item> itemPurchased=new HashSet<>();
+    private double totalPrice=0;
+    private int numItemPurchased=0;
+
+    @OneToOne(mappedBy = "userCart", cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY )
     private AppUser purchaser;
-
-    public Cart() {
-        this.itemPurchased = new HashSet<>();
-    }
-
     public long getId() {
         return id;
     }
@@ -62,3 +62,4 @@ public class Cart {
         this.purchaser = purchaser;
     }
 }
+

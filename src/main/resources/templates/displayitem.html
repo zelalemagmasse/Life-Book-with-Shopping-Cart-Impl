@@ -79,15 +79,18 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <ul>
-                                        <li th:text="${itemslist.nameOfItem}"></li>
-                                        <li th:text="${itemslist.description}"></li>
-                                        <li th:text="${itemslist.tags}"></li>
-                                        <li th:text="${itemslist.price}"></li>
-                                    </ul>
+
+                                        <p th:inline="text"><i class="fa fa-shield fa-fw w3-margin-right w3-text-theme"></i> Name of ITEM:[[${itemslist.nameOfItem}]] </p>
+                                        <p th:inline="text"><i class="fa fa-book fa-fw fa-fw w3-margin-right w3-text-theme"></i>Discription [[${itemslist.description}]] </p>
+                                        <p th:inline="text"><i class="fa fa-pie-chart fa-fw w3-margin-right w3-text-theme"></i> Category: [[${itemslist.tags}]] </p>
+                                        <p th:inline="text"><i class="fa fa-money fa-fw w3-margin-right w3-text-theme"></i> Price: [[${itemslist.price}]] </p>
+                                        <p th:inline="text"><i class="fa fa-line-chart fa-fw w3-margin-right w3-text-theme"></i> Number of Item In the Stock:[[${itemslist.numberInTheStock}]] </p>
+
+
                                 </div>
-                                <div >
-                                    <a th:href="@{/users/addtocart/{id}(id=${itemslist.id})}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i>Add to the Cart</button></a>
+                                <div th:switch="${itemslist.soldout}">
+                                    <span th:case="false">  <a th:href="@{/users/addtocart/{id}(id=${itemslist.id})}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i>Add to the Cart</button></a></span>
+                                    <span th:case="true"><a th:href="@{#}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-user-plus"></i>  SOLD OUT</button></a></span>
                                 </div>
                             </div>
 

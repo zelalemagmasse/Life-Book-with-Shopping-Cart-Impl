@@ -215,6 +215,7 @@ public class UserController {
        // model.addAttribute("myCart",new Cart());
         users.save(user);
         model.addAttribute("items", itemRepository.findAll());
+
         return "displayitem";
     }
     @RequestMapping("/addtocart/{id}")
@@ -224,10 +225,34 @@ public class UserController {
         model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
         model.addAttribute("articles", newsService.personalized(authentication));
         Item item=itemRepository.findById(id).get();
+        //item.setNumberInTheStock(item.getNumberInTheStock()-1);
         //System.out.println(item.getPrice());
+        if(user.getUserCart().getItemPurchased().contains(item)){
+            for(Item itemPurchasedAldy:user.getUserCart().getItemPurchased()){
+                if(itemPurchasedAldy.getId()==item.getId()){
+                    itemPurchasedAldy.setNumOfItem(itemPurchasedAldy.getNumOfItem()+1);
+                   itemPurchasedAldy.setNumberInTheStock(itemPurchasedAldy.getNumberInTheStock()-1);
+                   if(itemPurchasedAldy.getNumberInTheStock()<=0){
+                       itemPurchasedAldy.setSoldout(true);
+                       itemRepository.delete(itemPurchasedAldy);
+                   }
 
 
-        user.getUserCart().getItemPurchased().add(item);
+                }
+            }
+
+
+        } else {
+
+            item.setNumberInTheStock(item.getNumberInTheStock()-1);
+            user.getUserCart().getItemPurchased().add(item);
+            if(item.getNumberInTheStock()<=0){
+                item.setSoldout(true);
+                itemRepository.delete(item);
+            }
+
+        }
+
        // myCart=user.getUserCart().getItemPurchased().add(item);
 
       ;
@@ -235,10 +260,10 @@ public class UserController {
        // cartRepository.save(myCart);
 
         model.addAttribute("currentuser",user);
-       itemRepository.save(item);
-        model.addAttribute("items", itemRepository.findAll());
-        model.addAttribute("cart", shoppingService.priceCalculator(user.getUserCart()));
 
+
+        model.addAttribute("cart", shoppingService.priceCalculator(user.getUserCart()));
+        model.addAttribute("items", itemRepository.findAll());
         return "displayitem";
 
     }

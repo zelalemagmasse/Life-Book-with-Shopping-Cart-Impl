@@ -1,7 +1,6 @@
 package com.lifebook.Model;
 import com.lifebook.Model.News.Interest;
 import com.lifebook.Model.Shopping.Cart;
-import com.lifebook.Model.Shopping.Item;
 import com.lifebook.Service.ValidEmail;
 
 import javax.persistence.*;
@@ -16,9 +15,6 @@ public class AppUser {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
 
-//    public AppUser() {
-//
-//    }
 
     @NotNull
     @NotEmpty(message = "Please provide your first name")
@@ -53,7 +49,8 @@ public class AppUser {
     @ManyToMany
     private Set<Interest> interests = new HashSet<>();
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade=CascadeType.MERGE)
+    @JoinColumn(name = "user_cart")
     private Cart userCart;
 
     public Cart getUserCart() {
@@ -91,7 +88,7 @@ public class AppUser {
 
     public AppUser() {
         this.roles = new HashSet<>();
-       // this.myItems=new HashSet<>();
+        // this.myItems=new HashSet<>();
     }
 
     public long getId() {
