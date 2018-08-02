@@ -14,7 +14,7 @@ public class Cart {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
 
-    @OneToMany(cascade=CascadeType.ALL)
+    @ManyToMany(cascade=CascadeType.ALL)
     private Set<Item> itemPurchased=new HashSet<>();
     private double totalPrice=0;
     private int numItemPurchased=0;

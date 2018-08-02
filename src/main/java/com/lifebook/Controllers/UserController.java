@@ -234,34 +234,23 @@ public class UserController {
                    itemPurchasedAldy.setNumberInTheStock(itemPurchasedAldy.getNumberInTheStock()-1);
                    if(itemPurchasedAldy.getNumberInTheStock()<=0){
                        itemPurchasedAldy.setSoldout(true);
-                       itemRepository.delete(itemPurchasedAldy);
+                       //itemRepository.delete(itemPurchasedAldy);
                    }
-
-
                 }
             }
-
-
         } else {
-
             item.setNumberInTheStock(item.getNumberInTheStock()-1);
             user.getUserCart().getItemPurchased().add(item);
             if(item.getNumberInTheStock()<=0){
                 item.setSoldout(true);
-                itemRepository.delete(item);
+               // itemRepository.delete(item);
             }
-
         }
-
        // myCart=user.getUserCart().getItemPurchased().add(item);
-
-      ;
         users.save(user);
        // cartRepository.save(myCart);
 
         model.addAttribute("currentuser",user);
-
-
         model.addAttribute("cart", shoppingService.priceCalculator(user.getUserCart()));
         model.addAttribute("items", itemRepository.findAll());
         return "displayitem";

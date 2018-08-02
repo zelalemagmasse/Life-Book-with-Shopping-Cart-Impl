@@ -110,13 +110,19 @@
                             <th>Number Of Item Purchased</th>
                             <th>Total Price</th>
                         </tr>
-                        <tr th:each="eachCart:${cart}">
-                            <td th:text="${eachCart.numItemPurchased}"></td>
-                            <td th:text="${eachCart.totalPrice}"></td>
+                        <tr  th:if="${cart}">
+
+                            <td th:text="${cart.numItemPurchased}"></td>
+                            <td th:text="${cart.totalPrice}"></td>
 
                         </tr>
 
                     </table>
+                    <div th:if="${cart}">
+                    <div th:if="${cart.numItemPurchased >=1}">
+                        <span><a th:href="@{#}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-cart-plus "></i>  CHECK OUT </button></a></span>
+                    </div>
+                    </div>
 
                 </div>
             </div>
