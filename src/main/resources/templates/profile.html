@@ -32,6 +32,10 @@
         <!-- Interests -->
             <div class="w3-col m11">
                 <h4 class="w3-center">Headline News</h4>
+                <form class="form-inline my-2 my-lg-0" th:action="@{/users/findnews}" sec:authorize="isAuthenticated()">
+                    <input class="form-control mr-sm-1" type="text" name="query" placeholder="Search for a News Here..." aria-label="Search">
+                    <button class="btn btn-primary my-2 my-sm-0" type="submit"><i class="fa fa-search"></i></button>
+                </form>
                 <div class="w3-container w3-card w3-white w3-round w3-margin"th:each="article:${articles}"><br>
                     <span class="w3-right w3-opacity" th:text="${article.publishedAt}"></span>
                     <h4 th:text="${article.title}"></h4><br/>

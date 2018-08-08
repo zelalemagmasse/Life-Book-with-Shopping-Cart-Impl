@@ -113,6 +113,27 @@ public class UserController {
         model.addAttribute("posts", posts.toArray());
         return "profile";
     }
+    @RequestMapping("/findnews")
+    public String findNews(HttpServletRequest request,Model model, Authentication authentication) {
+        AppUser user = users.findByUsername(authentication.getName());
+
+        model.addAttribute("currentuser", user);
+        UserPost post = new UserPost();
+        model.addAttribute("post",post);
+        model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
+        System.out.println(weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(1).getDate());
+        Set<AppUser> following = user.getFollowing();
+        List<UserPost> posts = new ArrayList<>(user.getPosts());
+        for (AppUser u: following) {
+            posts.addAll(u.getPosts());
+        }
+        Collections.reverse(posts);
+        //model.addAttribute("articles", newsService.personalized(authentication));
+         model.addAttribute("articles",newsService.articlesBySearch(request.getParameter("query")));
+        model.addAttribute("posts", posts.toArray());
+        return "profile";
+    }
+
 
     @RequestMapping("/following")
     public String displayFollowing(Model model, Authentication authentication) {
@@ -160,6 +181,7 @@ public class UserController {
         model.addAttribute("currentuser", users.findByUsername(authentication.getName()));
         return "results";
     }
+
     @RequestMapping("/additem")
     public String addRoom(Model model,Authentication authentication) {
         model.addAttribute("anItem", new Item());
@@ -212,48 +234,94 @@ public class UserController {
 
         Cart myCart=new Cart();
         user.setUserCart(myCart);
-       // model.addAttribute("myCart",new Cart());
+        // model.addAttribute("myCart",new Cart());
         users.save(user);
         model.addAttribute("items", itemRepository.findAll());
 
         return "displayitem";
     }
+
+    @RequestMapping("/history")
+    public String purchaseHistory( Model model,Authentication authentication) {
+
+
+        AppUser user = users.findByUsername(authentication.getName());
+
+        model.addAttribute("currentuser", user);
+
+        model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
+        model.addAttribute("articles", newsService.personalized(authentication));
+
+        users.save(user);
+        model.addAttribute("items", itemRepository.findAll());
+        model.addAttribute("cart",user.getUserCart());
+        return "displayitem";
+    }
     @RequestMapping("/addtocart/{id}")
-    public String addToCart(@PathVariable("id") long id,  Model model, Authentication authentication){
+    public String addToCart(HttpServletRequest request,@PathVariable("id") long id,  Model model, Authentication authentication){
        AppUser user= users.findByUsername(authentication.getName());
         //System.out.println(user.getUsername());
         model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
         model.addAttribute("articles", newsService.personalized(authentication));
         Item item=itemRepository.findById(id).get();
-        //item.setNumberInTheStock(item.getNumberInTheStock()-1);
-        //System.out.println(item.getPrice());
-        if(user.getUserCart().getItemPurchased().contains(item)){
-            for(Item itemPurchasedAldy:user.getUserCart().getItemPurchased()){
-                if(itemPurchasedAldy.getId()==item.getId()){
-                    itemPurchasedAldy.setNumOfItem(itemPurchasedAldy.getNumOfItem()+1);
-                   itemPurchasedAldy.setNumberInTheStock(itemPurchasedAldy.getNumberInTheStock()-1);
-                   if(itemPurchasedAldy.getNumberInTheStock()<=0){
-                       itemPurchasedAldy.setSoldout(true);
-                       //itemRepository.delete(itemPurchasedAldy);
-                   }
-                }
-            }
-        } else {
-            item.setNumberInTheStock(item.getNumberInTheStock()-1);
-            user.getUserCart().getItemPurchased().add(item);
-            if(item.getNumberInTheStock()<=0){
-                item.setSoldout(true);
-               // itemRepository.delete(item);
-            }
-        }
-       // myCart=user.getUserCart().getItemPurchased().add(item);
+       int amount= Integer.parseInt(request.getParameter("amount"));
+       item.setNumOfItem(amount);
+        item.setNumberInTheStock(item.getNumberInTheStock()-amount);
+        if(item.getNumberInTheStock()<=0){
+            item.setSoldout(true);
+                 }
+       user.getUserCart().getItemPurchased().add(item);
         users.save(user);
        // cartRepository.save(myCart);
 
         model.addAttribute("currentuser",user);
+        Cart mycartnow=shoppingService.priceCalculator(user.getUserCart());
         model.addAttribute("cart", shoppingService.priceCalculator(user.getUserCart()));
         model.addAttribute("items", itemRepository.findAll());
         return "displayitem";
 
     }
+    @RequestMapping("/cancel")
+    public String cancelShopping(Authentication authentication,Model model){
+        AppUser user= users.findByUsername(authentication.getName());
+        model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
+        model.addAttribute("articles", newsService.personalized(authentication));
+        model.addAttribute("cart",shoppingService.cancelShoping(user.getUserCart()));
+        model.addAttribute("currentuser",user);
+        model.addAttribute("items",itemRepository.findAll());
+        return "displayitem";
+    }
+    @RequestMapping("/checkout")
+    public String checkout(Authentication authentication,Model model){
+        AppUser user= users.findByUsername(authentication.getName());
+
+
+        model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
+        model.addAttribute("articles", newsService.personalized(authentication));
+        user.getUserCart().setCheckout(true);
+        users.save(user);
+        model.addAttribute("cart",user.getUserCart());
+        model.addAttribute("currentuser",user);
+
+        return "checkout";
+    }
+    @RequestMapping("/check")
+    public String checkPurchase(Authentication authentication,Model model){
+        AppUser user= users.findByUsername(authentication.getName());
+        Cart myCart=shoppingService.priceCalculator(user.getUserCart());
+        if(myCart.isCheckout()){
+            return "redirect:/logout";
+        }
+        else if (myCart.getNumItemPurchased()==0){
+            return "redirect:/logout";
+        }
+        else {
+             shoppingService.cancelShoping(user.getUserCart());
+            return "redirect:/logout";
+
+        }
+
+
+    }
+
 }

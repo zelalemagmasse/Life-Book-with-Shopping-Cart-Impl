@@ -18,10 +18,20 @@ public class Cart {
     private Set<Item> itemPurchased=new HashSet<>();
     private double totalPrice=0;
     private int numItemPurchased=0;
+    private boolean checkout;
 
     @OneToOne(mappedBy = "userCart", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY )
     private AppUser purchaser;
+
+    public boolean isCheckout() {
+        return checkout;
+    }
+
+    public void setCheckout(boolean checkout) {
+        this.checkout = checkout;
+    }
+
     public long getId() {
         return id;
     }

@@ -57,58 +57,36 @@
         </div>
         <!--<tr th:each="itemslist: ${items}">-->
 
-            <!--<td th:text="${itemslist.nameOfItem}"></td>-->
-            <!--<td th:text="${itemslist.description}"></td>-->
-            <!--<td  th:text="${itemslist.tags}"></td>-->
-            <!--<td  th:text="${itemslist.price}"></td>-->
-            <!--<td  th:text="${itemslist.Soldout ? 'SOLD OUT' : 'AVAILABLE'}"></td>-->
-            <!--<td ><a th:href="@{/updateliste/{id}(id=${itemslist.id})}">Buy item</a></td>-->
+        <!--<td th:text="${itemslist.nameOfItem}"></td>-->
+        <!--<td th:text="${itemslist.description}"></td>-->
+        <!--<td  th:text="${itemslist.tags}"></td>-->
+        <!--<td  th:text="${itemslist.price}"></td>-->
+        <!--<td  th:text="${itemslist.Soldout ? 'SOLD OUT' : 'AVAILABLE'}"></td>-->
+        <!--<td ><a th:href="@{/updateliste/{id}(id=${itemslist.id})}">Buy item</a></td>-->
         <!--</tr>-->
 
         <!-- Middle Column -->
 
-        <h1 align="center">Properties for Sell</h1>
-        <div class="w3-col m7">
-            <div class="w3-row-padding">
-                <div class="w3-col m12">
-                    <div class="w3-card w3-round w3-white">
-                        <div class="w3-container w3-padding">
-                            <div  th:each = "itemslist: ${items}"><br>
-                                <div class="w3-row-padding" style="margin:0 -16px">
-                                    <div class="w3-half" th:if="${itemslist.productImage} != null">
-                                        <img th:src="${itemslist.productImage}" style="width:100%" alt="Post Image" >
+
+            <div class="w3-col m7">
+                <div class="w3-row-padding">
+                    <div class="w3-col m12">
+                        <div class="w3-card w3-round w3-white">
+                            <div class="w3-container w3-padding">
+                                <div  th:each = "itemslist: ${items}"><br>
+                                    <div class="w3-row-padding" style="margin:0 -16px">
+                                    </div>
+                                    <div>
+                                        <h1 align="center">Your Item Will be Delivered in Three days</h1>
                                     </div>
                                 </div>
-                                <div>
 
-                                        <p th:inline="text"><i class="fa fa-shield fa-fw w3-margin-right w3-text-theme"></i> Name of ITEM:[[${itemslist.nameOfItem}]] </p>
-                                        <p th:inline="text"><i class="fa fa-book fa-fw fa-fw w3-margin-right w3-text-theme"></i>Discription [[${itemslist.description}]] </p>
-                                        <p th:inline="text"><i class="fa fa-pie-chart fa-fw w3-margin-right w3-text-theme"></i> Category: [[${itemslist.tags}]] </p>
-                                        <p th:inline="text"><i class="fa fa-money fa-fw w3-margin-right w3-text-theme"></i> Price: [[${itemslist.price}]] </p>
-                                        <p th:inline="text"><i class="fa fa-line-chart fa-fw w3-margin-right w3-text-theme"></i> Number of Item In the Stock:[[${itemslist.numberInTheStock}]] </p>
-
-
-
-                                </div>
-
-                                <div th:switch="${itemslist.soldout}">
-                                    <form class="form-inline my-2 my-lg-0" th:action="@{/users/addtocart/{id}(id=${itemslist.id})}" sec:authorize="isAuthenticated()">
-                                        <input class="form-control mr-sm-1" type="number" name="amount" placeholder="Enter the Quantity...">
-                                        <!--<button class="btn btn-primary my-2 my-sm-0" type="submit"><i class="fa fa-search"></i></button>-->
-
-                                       <!--<span th:case="false">  <button type="submit" class="w3-button w3-theme-d2 w3-margin-bottom" onclick="document.getElementById('checkout').style.display='block'"><i class="fa fa-cc-visa"></i>Add to the Cart</button></span>-->
-                                       <span th:case="false">  <button type="submit" class="w3-button w3-theme-d2 w3-margin-bottom" ><i class="fa fa-cc-visa"></i>Add to the Cart</button></span>
-                                       <span th:case="true"><a th:href="@{#}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-dot-circle-o"></i>  SOLD OUT</button></a></span>
-                                    </form>
-                                </div>
                             </div>
-
+                        </div>
                     </div>
                 </div>
+                <!-- End Middle Column -->
             </div>
-            </div>
-            <!-- End Middle Column -->
-        </div>
 
 
         <!-- Right Column -->
@@ -137,10 +115,10 @@
                     <!--</div>-->
 
                     <div th:if="${cart}">
-                    <div th:if="${cart.numItemPurchased >=1}">
-                        <span><a th:href="@{/users/checkout}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" ><i class="fa fa-cart-plus "></i>  CHECK OUT </button></a></span>
-                        <span><a th:href="@{/users/cancel}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" ><i class="fa fa-undo "></i>  CANCEL </button></a></span>
-                    </div>
+                        <div th:if="${cart.numItemPurchased >=1}">
+                            <span><a th:href="@{/users/checkout}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" ><i class="fa fa-cart-plus "></i>  CHECK OUT </button></a></span>
+                            <span><a th:href="@{/users/cancel}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" ><i class="fa fa-undo "></i>  CANCEL </button></a></span>
+                        </div>
                     </div>
 
                 </div>

@@ -3,6 +3,7 @@ package com.lifebook.Service;
 import com.lifebook.Model.Shopping.Cart;
 import com.lifebook.Model.Shopping.Item;
 import com.lifebook.Repositories.AppUserRepository;
+import com.lifebook.Repositories.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,8 @@ public class ShoppingService {
 
     @Autowired
     AppUserRepository appUserRepository;
+    @Autowired
+    ItemRepository itemRepository;
     public Cart priceCalculator(Cart myCart){
        double total=0;
        int totalItemPurchased=0;
@@ -29,5 +32,17 @@ public class ShoppingService {
         myCart.setTotalPrice(total);
         myCart.setNumItemPurchased(totalItemPurchased);
      return  myCart;
+    }
+
+    public Cart cancelShoping(Cart myCart){
+        myCart.setNumItemPurchased(0);
+        for(Item eachItem:myCart.getItemPurchased()) {
+
+            eachItem.setNumberInTheStock(eachItem.getNumberInTheStock()+eachItem.getNumOfItem());
+            eachItem.setNumOfItem(0);
+            eachItem.setSoldout(false);
+            itemRepository.save(eachItem);
+        }
+        return myCart;
     }
 }
