@@ -221,6 +221,7 @@ public class UserController {
         return "redirect:/users/";
     }
 
+
     @RequestMapping("/buyitem")
     public String buyItem( Model model,Authentication authentication) {
 
@@ -229,18 +230,36 @@ public class UserController {
 
         model.addAttribute("currentuser", user);
 
-       // model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
+        // model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
         model.addAttribute("articles", newsService.personalized(authentication));
 
         Cart myCart=new Cart();
         user.setUserCart(myCart);
         // model.addAttribute("myCart",new Cart());
         users.save(user);
-        model.addAttribute("items", shoppingService.filteredItem(user));
+        model.addAttribute("items", shoppingService.filteredItemForOtherUser(user));
 
         return "displayitem";
     }
 
+    @RequestMapping("/showownitem")
+    public String showOwnItem( Model model,Authentication authentication) {
+
+
+        AppUser user = users.findByUsername(authentication.getName());
+
+        model.addAttribute("currentuser", user);
+
+        // model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
+        model.addAttribute("articles", newsService.personalized(authentication));
+
+
+        // model.addAttribute("myCart",new Cart());
+        users.save(user);
+        model.addAttribute("items", shoppingService.filteredItemForYourOwn(user));
+
+        return "displayitem";
+    }
     @RequestMapping("/notification")
     public String purchaseHistory( Model model,Authentication authentication) {
 
@@ -253,7 +272,7 @@ public class UserController {
         model.addAttribute("articles", newsService.personalized(authentication));
 
         users.save(user);
-        model.addAttribute("items",  shoppingService.filteredItem(user));
+        model.addAttribute("items",  shoppingService.filteredItemForOtherUser(user));
         model.addAttribute("cart",user.getUserCart());
         return "notification";
     }
@@ -277,7 +296,7 @@ public class UserController {
         model.addAttribute("currentuser",user);
         Cart mycartnow=shoppingService.priceCalculator(user.getUserCart());
         model.addAttribute("cart", shoppingService.priceCalculator(user.getUserCart()));
-        model.addAttribute("items",  shoppingService.filteredItem(user));
+        model.addAttribute("items",  shoppingService.filteredItemForOtherUser(user));
         return "displayitem";
 
     }
@@ -288,7 +307,7 @@ public class UserController {
         model.addAttribute("articles", newsService.personalized(authentication));
         model.addAttribute("cart",shoppingService.cancelShoping(user.getUserCart()));
         model.addAttribute("currentuser",user);
-        model.addAttribute("items", shoppingService.filteredItem(user));
+        model.addAttribute("items", shoppingService.filteredItemForOtherUser(user));
         return "displayitem";
     }
     @RequestMapping("/checkout")

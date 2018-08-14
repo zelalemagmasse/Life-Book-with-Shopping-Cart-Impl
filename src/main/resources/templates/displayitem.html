@@ -91,6 +91,7 @@
 
 
                                 </div>
+                                <div th:if="${currentuser.username} != ${itemslist.itemOwner}">
 
                                 <div th:switch="${itemslist.soldout}">
                                     <form class="form-inline my-2 my-lg-0" th:action="@{/users/addtocart/{id}(id=${itemslist.id})}" sec:authorize="isAuthenticated()">
@@ -101,6 +102,7 @@
                                        <span th:case="false">  <button type="submit" class="w3-button w3-theme-d2 w3-margin-bottom" ><i class="fa fa-cc-visa"></i>Add to the Cart</button></span>
                                        <span th:case="true"><a th:href="@{#}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-dot-circle-o"></i>  SOLD OUT</button></a></span>
                                     </form>
+                                </div>
                                 </div>
                             </div>
 
@@ -113,6 +115,8 @@
 
 
         <!-- Right Column -->
+        <div  th:each = "itemslist: ${items}">
+            <div th:if="${currentuser.username} != ${itemslist.itemOwner}">
         <div class="w3-col m3">
             <div class="w3-card w3-round w3-white">
                 <div class="w3-container">
@@ -147,6 +151,8 @@
                 </div>
             </div>
             <!-- End Right Column -->
+        </div>
+        </div>
         </div>
 
         <!-- End Grid -->

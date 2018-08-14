@@ -66,13 +66,24 @@ public class ShoppingService {
         return myCart;
     }
 
-    public Set<Item>filteredItem(AppUser usernow){
+
+    public Set<Item>filteredItemForYourOwn(AppUser usernow){
         Iterable<Item>items=itemRepository.findAll();
         Set<Item>filtered=new HashSet<>();
         for (Item eachItem:items){
-           if(!eachItem.getItemOwner().equalsIgnoreCase(usernow.getUsername())) {
-               filtered.add(eachItem);
-           }
+            if(eachItem.getItemOwner().equalsIgnoreCase(usernow.getUsername())) {
+                filtered.add(eachItem);
+            }
+        }
+        return filtered;
+    }
+    public Set<Item>filteredItemForOtherUser(AppUser usernow){
+        Iterable<Item>items=itemRepository.findAll();
+        Set<Item>filtered=new HashSet<>();
+        for (Item eachItem:items){
+            if(!eachItem.getItemOwner().equalsIgnoreCase(usernow.getUsername())) {
+                filtered.add(eachItem);
+            }
         }
         return filtered;
     }
