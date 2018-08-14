@@ -105,39 +105,39 @@
 
             <!-- Right Column -->
         </div>
-        <div class="w3-col m3">
-            <div class="w3-card w3-round w3-white">
-                <div class="w3-container">
-                    <p>Weather conditions for the next 7 days:</p>
-                    <table class="menu">
-                        <tr>
-                            <th>Date</th>
-                            <th>Maximum Temp</th>
-                            <th>Minimum Temp</th>
-                            <!--<th>Total Precipitation</th>-->
-                            <th>Weather Condition</th>
-                            <!--<th>Graphic representation</th>-->
+        <!--<div class="w3-col m3">-->
+            <!--<div class="w3-card w3-round w3-white">-->
+                <!--<div class="w3-container">-->
+                    <!--<p>Weather conditions for the next 7 days:</p>-->
+                    <!--<table class="menu">-->
+                        <!--<tr>-->
+                            <!--<th>Date</th>-->
+                            <!--<th>Maximum Temp</th>-->
+                            <!--<th>Minimum Temp</th>-->
+                            <!--&lt;!&ndash;<th>Total Precipitation</th>&ndash;&gt;-->
+                            <!--<th>Weather Condition</th>-->
+                            <!--&lt;!&ndash;<th>Graphic representation</th>&ndash;&gt;-->
 
 
-                        </tr>
-                        <tr th:each="weather:${weatherforcast}">
-                            <td th:text="${weather.date}"></td>
-                            <td th:text="${weather.day.maxtemp_f}"></td>
-                            <td th:text="${weather.day.mintemp_f}"></td>
-                            <!--<td th:text="${weather.day.totalprecip_in}"></td>-->
-                            <td th:text="${weather.day.condition.text}"></td>
-                            <!--<td img th:src="${weather.day.condition.icon}" alt="Weather icon"></td>-->
-                            <!--img th:src="${forecast.stat.condition.icon}"-->
-                        </tr>
+                        <!--</tr>-->
+                        <!--<tr th:each="weather:${weatherforcast}">-->
+                            <!--<td th:text="${weather.date}"></td>-->
+                            <!--<td th:text="${weather.day.maxtemp_f}"></td>-->
+                            <!--<td th:text="${weather.day.mintemp_f}"></td>-->
+                            <!--&lt;!&ndash;<td th:text="${weather.day.totalprecip_in}"></td>&ndash;&gt;-->
+                            <!--<td th:text="${weather.day.condition.text}"></td>-->
+                            <!--&lt;!&ndash;<td img th:src="${weather.day.condition.icon}" alt="Weather icon"></td>&ndash;&gt;-->
+                            <!--&lt;!&ndash;img th:src="${forecast.stat.condition.icon}"&ndash;&gt;-->
+                        <!--</tr>-->
 
-                    </table>
-                    <p>
-                        <span class="w3-tag w3-small w3-theme-d5">Weather</span>
-                    </p>
-                </div>
-            </div>
-            <!-- End Right Column -->
-        </div>
+                    <!--</table>-->
+                    <!--<p>-->
+                        <!--<span class="w3-tag w3-small w3-theme-d5">Weather</span>-->
+                    <!--</p>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--&lt;!&ndash; End Right Column &ndash;&gt;-->
+        <!--</div>-->
 
         <!-- End Grid -->
     </div>

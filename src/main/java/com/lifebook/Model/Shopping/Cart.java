@@ -3,10 +3,8 @@ package com.lifebook.Model.Shopping;
 import com.lifebook.Model.AppUser;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Entity
 public class Cart {
@@ -19,10 +17,28 @@ public class Cart {
     private double totalPrice=0;
     private int numItemPurchased=0;
     private boolean checkout;
+    private Date dateOfPurchase;
+    private Date deliveryDate;
 
     @OneToOne(mappedBy = "userCart", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY )
     private AppUser purchaser;
+
+    public Date getDeliveryDate() {
+        return deliveryDate;
+    }
+
+    public void setDeliveryDate(Date deliveryDate) {
+        this.deliveryDate = deliveryDate;
+    }
+
+    public Date getDateOfPurchase() {
+        return dateOfPurchase;
+    }
+
+    public void setDateOfPurchase(Date dateOfPurchase) {
+        this.dateOfPurchase = dateOfPurchase;
+    }
 
     public boolean isCheckout() {
         return checkout;

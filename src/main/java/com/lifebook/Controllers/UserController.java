@@ -100,8 +100,7 @@ public class UserController {
         model.addAttribute("currentuser", user);
         UserPost post = new UserPost();
         model.addAttribute("post",post);
-        model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
-        System.out.println(weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(1).getDate());
+        //model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
         Set<AppUser> following = user.getFollowing();
         List<UserPost> posts = new ArrayList<>(user.getPosts());
         for (AppUser u: following) {
@@ -120,7 +119,7 @@ public class UserController {
         model.addAttribute("currentuser", user);
         UserPost post = new UserPost();
         model.addAttribute("post",post);
-        model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
+      // model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
         System.out.println(weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(1).getDate());
         Set<AppUser> following = user.getFollowing();
         List<UserPost> posts = new ArrayList<>(user.getPosts());
@@ -187,21 +186,22 @@ public class UserController {
         model.addAttribute("anItem", new Item());
         AppUser user = users.findByUsername(authentication.getName());
         model.addAttribute("currentuser", user);
-        model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
-        System.out.println(weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(1).getDate());
+       // model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
         model.addAttribute("articles", newsService.personalized(authentication));
         return "itemform";
     }
     @RequestMapping("/saveitem")
     public String saveItem(@ModelAttribute("anItem") Item item,@RequestParam("file") MultipartFile file, Model model,Authentication authentication) {
+        AppUser user = users.findByUsername(authentication.getName());
+        item.setItemOwner(user.getUsername());
         itemRepository.save(item);
 
-        AppUser user = users.findByUsername(authentication.getName());
+
 
         model.addAttribute("currentuser", user);
 
-        model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
-        System.out.println(weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(1).getDate());
+       // model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
+       // System.out.println(weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday().get(1).getDate());
         model.addAttribute("articles", newsService.personalized(authentication));
         if (!file.isEmpty()) {
             try {
@@ -218,7 +218,7 @@ public class UserController {
         }
         itemRepository.save(item);
         //model.addAttribute("items", itemRepository.findByOwner(user));
-        return "displayitem";
+        return "redirect:/users/";
     }
 
     @RequestMapping("/buyitem")
@@ -229,19 +229,19 @@ public class UserController {
 
         model.addAttribute("currentuser", user);
 
-        model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
+       // model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
         model.addAttribute("articles", newsService.personalized(authentication));
 
         Cart myCart=new Cart();
         user.setUserCart(myCart);
         // model.addAttribute("myCart",new Cart());
         users.save(user);
-        model.addAttribute("items", itemRepository.findAll());
+        model.addAttribute("items", shoppingService.filteredItem(user));
 
         return "displayitem";
     }
 
-    @RequestMapping("/history")
+    @RequestMapping("/notification")
     public String purchaseHistory( Model model,Authentication authentication) {
 
 
@@ -249,19 +249,19 @@ public class UserController {
 
         model.addAttribute("currentuser", user);
 
-        model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
+       // model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
         model.addAttribute("articles", newsService.personalized(authentication));
 
         users.save(user);
-        model.addAttribute("items", itemRepository.findAll());
+        model.addAttribute("items",  shoppingService.filteredItem(user));
         model.addAttribute("cart",user.getUserCart());
-        return "displayitem";
+        return "notification";
     }
     @RequestMapping("/addtocart/{id}")
     public String addToCart(HttpServletRequest request,@PathVariable("id") long id,  Model model, Authentication authentication){
        AppUser user= users.findByUsername(authentication.getName());
         //System.out.println(user.getUsername());
-        model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
+       // model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
         model.addAttribute("articles", newsService.personalized(authentication));
         Item item=itemRepository.findById(id).get();
        int amount= Integer.parseInt(request.getParameter("amount"));
@@ -277,18 +277,18 @@ public class UserController {
         model.addAttribute("currentuser",user);
         Cart mycartnow=shoppingService.priceCalculator(user.getUserCart());
         model.addAttribute("cart", shoppingService.priceCalculator(user.getUserCart()));
-        model.addAttribute("items", itemRepository.findAll());
+        model.addAttribute("items",  shoppingService.filteredItem(user));
         return "displayitem";
 
     }
     @RequestMapping("/cancel")
     public String cancelShopping(Authentication authentication,Model model){
         AppUser user= users.findByUsername(authentication.getName());
-        model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
+       // model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
         model.addAttribute("articles", newsService.personalized(authentication));
         model.addAttribute("cart",shoppingService.cancelShoping(user.getUserCart()));
         model.addAttribute("currentuser",user);
-        model.addAttribute("items",itemRepository.findAll());
+        model.addAttribute("items", shoppingService.filteredItem(user));
         return "displayitem";
     }
     @RequestMapping("/checkout")
@@ -296,11 +296,14 @@ public class UserController {
         AppUser user= users.findByUsername(authentication.getName());
 
 
-        model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
+       // model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
         model.addAttribute("articles", newsService.personalized(authentication));
         user.getUserCart().setCheckout(true);
         users.save(user);
-        model.addAttribute("cart",user.getUserCart());
+        model.addAttribute("cart", shoppingService.pricePlusNotification(user.getUserCart(),user));
+        user.setUserCart(shoppingService.pricePlusNotification(user.getUserCart(),user));
+        users.save(user);
+        model.addAttribute("items",user.getUserCart().getItemPurchased());
         model.addAttribute("currentuser",user);
 
         return "checkout";

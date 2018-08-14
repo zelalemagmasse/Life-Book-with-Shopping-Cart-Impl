@@ -26,11 +26,29 @@ public class Item {
     private int numOfItem=1;
     private boolean soldout;
     private String productImage;
+    private boolean purchased;
 
     private double totalPrice;
 
     private boolean added;
     private int totalItemPuchased;
+    private String itemOwner;
+
+    public boolean isPurchased() {
+        return purchased;
+    }
+
+    public void setPurchased(boolean purchased) {
+        this.purchased = purchased;
+    }
+
+    public String getItemOwner() {
+        return itemOwner;
+    }
+
+    public void setItemOwner(String itemOwner) {
+        this.itemOwner = itemOwner;
+    }
 
     public int getNumberInTheStock() {
         return numberInTheStock;
