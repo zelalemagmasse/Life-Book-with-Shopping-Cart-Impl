@@ -68,7 +68,8 @@
         <!-- Middle Column -->
        <div th:if="${cart}">
         <div class="container" th:if="${cart.addressFilled}">
-            <h2>Item for Delivery</h2>
+            <h2>Item for Delivery    </h2>
+
             <p th:inline="text"><i class="fa fa-clock-o fa-fw w3-margin-right w3-text-theme"></i> Date of purchase : [[${cart.dateOfPurchase}]]</p>
 
             <table >
@@ -104,6 +105,10 @@
             </table>
             <p th:inline="text"><i class="fa fa-clock-o fa-fw w3-margin-right w3-text-theme"></i>Your Item Will Be Shipped to  : [[${currentuser.streetAddress}]] and zip code: [[${currentuser.zipCode}]] </p>
             <p th:inline="text"><i class="fa fa-clock-o fa-fw w3-margin-right w3-text-theme"></i> Date of Delivery will be : [[${cart.deliveryDate}]]</p>
+            <p><form>
+                    <input type="button" value="Print Your Bill" onclick="window.print()" />
+               </form>
+            </p>
         </div>
            <div class="container" th:if="${!cart.addressFilled}">
                <div class="w3-col m7">
