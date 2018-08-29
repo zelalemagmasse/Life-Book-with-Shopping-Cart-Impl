@@ -3,6 +3,7 @@
 <head>
     <title>Profile</title>
     <th:block th:replace="base :: headstuff"></th:block>
+
 </head>
 <body class="w3-theme-l5">
 
@@ -67,7 +68,7 @@
 
         <!-- Middle Column -->
 
-        <h1 align="center">Properties for Sell</h1>
+        <h1 align="left">Properties for Sell</h1>
         <div class="w3-col m7">
             <div class="w3-row-padding">
                 <div class="w3-col m12">
@@ -85,7 +86,7 @@
                                         <p th:inline="text"><i class="fa fa-book fa-fw fa-fw w3-margin-right w3-text-theme"></i>Discription [[${itemslist.description}]] </p>
                                         <p th:inline="text"><i class="fa fa-pie-chart fa-fw w3-margin-right w3-text-theme"></i> Category: [[${itemslist.tags}]] </p>
                                         <p th:inline="text"><i class="fa fa-money fa-fw w3-margin-right w3-text-theme"></i> Price: [[${itemslist.price}]] </p>
-                                        <p th:inline="text"><i class="fa fa-line-chart fa-fw w3-margin-right w3-text-theme"></i> Number of Item In the Stock:[[${itemslist.numberInTheStock}]] </p>
+                                        <p th:inline="text" id="numIntheStock"><i class="fa fa-line-chart fa-fw w3-margin-right w3-text-theme" ></i> Number of Item In the Stock:[[${itemslist.numberInTheStock}]] </p>
                                         <p th:inline="text"><i class="fa fa-line-chart fa-fw w3-margin-right w3-text-theme"></i> Propery Owner:[[${itemslist.itemOwner}]] </p>
 
 
@@ -94,12 +95,12 @@
                                 <div th:if="${currentuser.username} != ${itemslist.itemOwner}">
 
                                 <div th:switch="${itemslist.soldout}">
-                                    <form class="form-inline my-2 my-lg-0" th:action="@{/users/addtocart/{id}(id=${itemslist.id})}" sec:authorize="isAuthenticated()">
+                                    <form name="myform" class="form-inline my-2 my-lg-0" th:action="@{/users/addtocart/{id}(id=${itemslist.id})}" sec:authorize="isAuthenticated()">
                                         <input class="form-control mr-sm-1" type="number" name="amount" placeholder="Enter the Quantity...">
                                         <!--<button class="btn btn-primary my-2 my-sm-0" type="submit"><i class="fa fa-search"></i></button>-->
 
                                        <!--<span th:case="false">  <button type="submit" class="w3-button w3-theme-d2 w3-margin-bottom" onclick="document.getElementById('checkout').style.display='block'"><i class="fa fa-cc-visa"></i>Add to the Cart</button></span>-->
-                                       <span th:case="false">  <button type="submit" class="w3-button w3-theme-d2 w3-margin-bottom" ><i class="fa fa-cc-visa"></i>Add to the Cart</button></span>
+                                       <span th:case="false">  <button type="submit" class="w3-button w3-theme-d2 w3-margin-bottom" onclick="writeAmount()" ><i class="fa fa-cc-visa"></i>Add to the Cart</button></span>
                                        <span th:case="true"><a th:href="@{#}"><button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-dot-circle-o"></i>  SOLD OUT</button></a></span>
                                     </form>
                                 </div>
@@ -115,18 +116,19 @@
 
 
         <!-- Right Column -->
-        <div  th:each = "itemslist: ${items}">
-            <div th:if="${currentuser.username} != ${itemslist.itemOwner}">
-        <div class="w3-col m3">
+
+
+        <div class="w3-col m3"  th:if="${cart}">
+            <div th:if="${cart.numItemPurchased!=0}">
             <div class="w3-card w3-round w3-white">
                 <div class="w3-container">
                     <p>Cart:</p>
-                    <table class="menu">
+                    <table class="menu" >
                         <tr>
                             <th>Number Of Item Purchased</th>
                             <th>Total Price</th>
                         </tr>
-                        <tr  th:if="${cart}">
+                        <tr >
 
                             <td th:text="${cart.numItemPurchased}"></td>
                             <td th:text="${cart.totalPrice}"></td>
@@ -153,7 +155,8 @@
             <!-- End Right Column -->
         </div>
         </div>
-        </div>
+
+
 
         <!-- End Grid -->
     </div>

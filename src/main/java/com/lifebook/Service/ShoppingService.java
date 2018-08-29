@@ -49,8 +49,15 @@ public class ShoppingService {
        Set<Item>items= priceCalculator(myCart).getItemPurchased();
        for(Item eachItem:items){
             AppUser owner= appUserRepository.findByUsername(eachItem.getItemOwner());
-            owner.setNotification("your" + eachItem.getNameOfItem() +" has been bought by " + userNow.getFirstName() + " "+ userNow.getLastName());
+            owner.setNotification("your" + eachItem.getNameOfItem() +" has been bought by " + userNow.getFirstName() + " "+ userNow.getLastName()
+            + " his address for Delivery " + userNow.getStreetAddress() + " " + userNow.getZipCode());
        }
+       if(userNow.getStreetAddress()!=null){
+           myCart.setAddressFilled(true);
+       }
+       else {
+           myCart.setAddressFilled(false);
+        }
        return myCart;
     }
 
@@ -61,8 +68,11 @@ public class ShoppingService {
             eachItem.setNumberInTheStock(eachItem.getNumberInTheStock()+eachItem.getNumOfItem());
             eachItem.setNumOfItem(0);
             eachItem.setSoldout(false);
+
             itemRepository.save(eachItem);
         }
+        myCart.setNumItemPurchased(0);
+        myCart.setTotalPrice(0);
         return myCart;
     }
 

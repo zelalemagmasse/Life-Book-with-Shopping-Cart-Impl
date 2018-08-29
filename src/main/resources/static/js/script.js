@@ -39,3 +39,15 @@ function myFunction() {
 function myFunction() {
     document.getElementById("demo").innerHTML = "Paragraph changed.";
 }
+
+function writeAmount()
+{
+    if( document.myform.amount.value == ""||isNaN(document.myform.amount.value)||document.myform.amount.value<1) {
+        alert("Enter some valid amount!");
+        document.myform.amount.value = 0;
+        return;
+    }
+    else if (document.getElementById("numIntheStock").value<document.myform.amount.value){
+        alert("Enter a Valid amount!");
+    }
+    }

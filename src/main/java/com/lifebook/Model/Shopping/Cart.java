@@ -17,6 +17,7 @@ public class Cart {
     private double totalPrice=0;
     private int numItemPurchased=0;
     private boolean checkout;
+    private boolean addressFilled;
     private Date dateOfPurchase;
     private Date deliveryDate;
 
@@ -30,6 +31,14 @@ public class Cart {
 
     public void setDeliveryDate(Date deliveryDate) {
         this.deliveryDate = deliveryDate;
+    }
+
+    public boolean isAddressFilled() {
+        return addressFilled;
+    }
+
+    public void setAddressFilled(boolean addressFilled) {
+        this.addressFilled = addressFilled;
     }
 
     public Date getDateOfPurchase() {

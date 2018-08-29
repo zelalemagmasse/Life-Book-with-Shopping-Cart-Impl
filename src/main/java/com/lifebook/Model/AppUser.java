@@ -82,6 +82,8 @@ public class AppUser {
 
     private String zipCode;
 
+    private String streetAddress;
+
     private boolean enabled;
 
     private String confirmationToken;
@@ -100,6 +102,14 @@ public class AppUser {
     public AppUser() {
         this.roles = new HashSet<>();
         // this.myItems=new HashSet<>();
+    }
+
+    public String getStreetAddress() {
+        return streetAddress;
+    }
+
+    public void setStreetAddress(String streetAddress) {
+        this.streetAddress = streetAddress;
     }
 
     public long getId() {

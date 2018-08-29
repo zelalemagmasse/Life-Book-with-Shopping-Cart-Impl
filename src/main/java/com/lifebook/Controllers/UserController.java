@@ -279,13 +279,19 @@ public class UserController {
     @RequestMapping("/addtocart/{id}")
     public String addToCart(HttpServletRequest request,@PathVariable("id") long id,  Model model, Authentication authentication){
        AppUser user= users.findByUsername(authentication.getName());
-        //System.out.println(user.getUsername());
-       // model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
+        int amount;
         model.addAttribute("articles", newsService.personalized(authentication));
         Item item=itemRepository.findById(id).get();
-       int amount= Integer.parseInt(request.getParameter("amount"));
-       item.setNumOfItem(amount);
-        item.setNumberInTheStock(item.getNumberInTheStock()-amount);
+        amount= Integer.parseInt(request.getParameter("amount"));
+       if(item.getNumberInTheStock()<amount){
+
+           item.setNumOfItem(item.getNumberInTheStock());
+           item.setNumberInTheStock(0);
+       }
+       else {
+           item.setNumOfItem(amount);
+           item.setNumberInTheStock(item.getNumberInTheStock() - amount);
+       }
         if(item.getNumberInTheStock()<=0){
             item.setSoldout(true);
                  }
@@ -294,7 +300,7 @@ public class UserController {
        // cartRepository.save(myCart);
 
         model.addAttribute("currentuser",user);
-        Cart mycartnow=shoppingService.priceCalculator(user.getUserCart());
+        //Cart mycartnow=shoppingService.priceCalculator(user.getUserCart());
         model.addAttribute("cart", shoppingService.priceCalculator(user.getUserCart()));
         model.addAttribute("items",  shoppingService.filteredItemForOtherUser(user));
         return "displayitem";
@@ -316,6 +322,29 @@ public class UserController {
 
 
        // model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
+        model.addAttribute("articles", newsService.personalized(authentication));
+        user.getUserCart().setCheckout(true);
+        users.save(user);
+        model.addAttribute("cart", shoppingService.priceCalculator(user.getUserCart()));
+        user.setUserCart(shoppingService.pricePlusNotification(user.getUserCart(),user));
+        users.save(user);
+        model.addAttribute("items",user.getUserCart().getItemPurchased());
+        model.addAttribute("currentuser",user);
+        model.addAttribute("aUser",new AppUser());
+
+        return "checkout";
+    }
+
+    @RequestMapping("/checkoutdelivery")
+    public String checkoutDelivery(@ModelAttribute("aUser") AppUser user1, Authentication authentication,Model model){
+        //System.out.println(user1.getStreetAddress());
+        //users.save(user1);
+        AppUser user= users.findByUsername(authentication.getName());
+        user.setStreetAddress(user1.getStreetAddress());
+        user.setZipCode(user1.getZipCode());
+
+
+        // model.addAttribute("weatherforcast",weatherService.fetchForcast(user.getZipCode(),7).getForecast().getForecastday());
         model.addAttribute("articles", newsService.personalized(authentication));
         user.getUserCart().setCheckout(true);
         users.save(user);
